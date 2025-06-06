@@ -197,10 +197,9 @@ async function handlePurchase() {
     checkoutButton.disabled = true;
     
     try {
-        // Track purchase attempt
-        trackEvent('purchase_attempt', {
+        // Track purchase attempt        trackEvent('purchase_attempt', {
             product: 'quiet_the_noise_ebook',
-            price: 19.97
+            price: 7.99
         });
         
         // For demo purposes, simulate checkout process

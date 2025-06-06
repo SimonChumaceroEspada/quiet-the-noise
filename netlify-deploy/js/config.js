@@ -19,9 +19,8 @@ const CONFIG = {
     SUPPORT_EMAIL: 'support@quietthenoise.com',
     REFUNDS_EMAIL: 'refunds@quietthenoise.com',
     BUSINESS_NAME: 'Quiet the Noise',
-    
-    // Product Details
-    BOOK_PRICE: 27.00,
+      // Product Details
+    BOOK_PRICE: 7.99,
     BOOK_CURRENCY: 'USD',
     
     // SEO
