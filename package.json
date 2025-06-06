@@ -1,0 +1,47 @@
+{
+  "name": "quiet-the-noise-landing-page",
+  "version": "1.0.0",
+  "description": "Professional eBook landing page for Quiet the Noise - optimized for conversions",
+  "main": "index.html",  "scripts": {
+    "dev": "live-server --port=3000 --open=/index.html",
+    "build": "npm run validate && npm run minify-css && npm run minify-js",
+    "minify-css": "cleancss -o css/styles.min.css css/styles.css",
+    "minify-js": "uglifyjs js/main.js -o js/main.min.js",
+    "lighthouse": "lighthouse http://localhost:3000 --output=html --output-path=./lighthouse-report.html",
+    "validate": "html-validate index.html",
+    "test": "echo \"Tests will be added in future versions\" && exit 0",
+    "predeploy": "npm run build",
+    "deploy": "echo \"Deployment will be handled by Netlify\"",
+    "preview": "live-server --port=8080 --no-browser"
+  },
+  "keywords": [
+    "ebook",
+    "landing-page",
+    "mental-health",
+    "anxiety",
+    "mindfulness",
+    "conversion-optimization"
+  ],
+  "author": "Simon",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "clean-css-cli": "^5.6.2",
+    "uglify-js": "^3.17.4",
+    "lighthouse": "^10.4.0",
+    "html-validate": "^8.5.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/quiet-the-noise-landing-page.git"
+  },
+  "homepage": "https://quietthenoise.com",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

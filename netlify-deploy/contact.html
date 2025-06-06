@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Quiet the Noise</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="index.html"><h1 class="logo-text">Quiet the Noise</h1></a>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="index.html#purchase" class="nav-link cta-button">Get Your Copy</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="contact-page">
+        <div class="container">
+            <div class="contact-header">
+                <h1>Contact Us</h1>
+                <p>We're here to help! Get in touch with any questions about "Quiet the Noise" or need support with your purchase.</p>
+            </div>
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>Get in Touch</h2>
+                    <div class="contact-method">
+                        <h3>📧 Email Support</h3>
+                        <p><strong>General Questions:</strong> support@quietthenoise.com</p>
+                        <p><strong>Refunds:</strong> refunds@quietthenoise.com</p>
+                        <p><strong>Technical Issues:</strong> tech@quietthenoise.com</p>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <h3>⏰ Response Time</h3>
+                        <p>We respond to all emails within 24 hours during business days (Monday-Friday, 9 AM - 6 PM EST).</p>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <h3>🛡️ Purchase Protection</h3>
+                        <p>Remember: All purchases are protected by our 30-day money-back guarantee. No questions asked!</p>
+                    </div>
+                </div>
+
+                <div class="contact-form-container">
+                    <h2>Send Us a Message</h2>
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Your Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a topic...</option>
+                                <option value="general">General Question</option>
+                                <option value="technical">Technical Support</option>
+                                <option value="refund">Refund Request</option>
+                                <option value="download">Download Issues</option>
+                                <option value="billing">Billing Question</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="orderNumber">Order Number (if applicable)</label>
+                            <input type="text" id="orderNumber" name="orderNumber" placeholder="e.g., ORDER_123456">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Your Message *</label>
+                            <textarea id="message" name="message" rows="6" required placeholder="Please describe your question or issue in detail..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-button">Send Message</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="faq-preview">
+                <h2>Quick Answers</h2>
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>📱 What formats do I get?</h3>
+                        <p>You'll receive the eBook in PDF, ePub, and Kindle formats for maximum compatibility.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>⚡ How fast is delivery?</h3>
+                        <p>Instant! Download links are sent immediately after your payment is processed.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>💰 What about refunds?</h3>
+                        <p>30-day money-back guarantee. Simply email refunds@quietthenoise.com with your order number.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>🔒 Is payment secure?</h3>
+                        <p>Yes! We use Stripe for secure payment processing. Your financial information is never stored on our servers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Quiet the Noise. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="refund-policy.html">Refund Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Simple validation
+            if (!data.name || !data.email || !data.subject || !data.message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Here you would typically send the data to your backend
+            // For now, we'll show a success message
+            alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+            
+            // Reset form
+            this.reset();
+            
+            // Track form submission
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'form_submit', {
+                    event_category: 'contact',
+                    event_label: data.subject
+                });
+            }
+        });
+    </script>
+</body>
+</html>
