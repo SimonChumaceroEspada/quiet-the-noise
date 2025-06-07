@@ -176,20 +176,67 @@ function handleEmailCapture(form) {
     }, 1500);
 }
 
-// Payment Processing with Stripe
-function initializePaymentProcessing() {    // Initialize Stripe (replace with your actual publishable key)
+// Payment Processing with Stripe and PayPal
+function initializePaymentProcessing() {    
+    // Initialize Stripe (replace with your actual publishable key)
     const stripe = Stripe(window.CONFIG?.STRIPE_PUBLISHABLE_KEY || 'pk_test_your_stripe_publishable_key_here');
     
     const checkoutButton = document.getElementById('checkout-button');
     
     if (checkoutButton) {
         checkoutButton.addEventListener('click', function() {
-            handlePurchase();
+            handlePurchase('stripe');
+        });
+    }
+    
+    // Initialize PayPal tracking
+    initializePayPalTracking();
+}
+
+// PayPal Tracking and Integration
+function initializePayPalTracking() {
+    // Track when PayPal button is loaded
+    const checkPayPalLoaded = setInterval(() => {
+        const paypalContainer = document.getElementById('paypal-container-T62JMDAV6VUBQ');
+        if (paypalContainer && paypalContainer.children.length > 0) {
+            clearInterval(checkPayPalLoaded);
+            
+            // Track PayPal button render
+            trackEvent('paypal_button_rendered', {
+                product: 'quiet_the_noise_ebook'
+            });
+            
+            // Add click tracking to PayPal button
+            const paypalButton = paypalContainer.querySelector('iframe');
+            if (paypalButton) {
+                paypalButton.addEventListener('load', function() {
+                    trackEvent('paypal_button_loaded', {
+                        product: 'quiet_the_noise_ebook'
+                    });
+                });
+            }
+        }
+    }, 500);
+    
+    // Clear interval after 10 seconds to prevent endless checking
+    setTimeout(() => clearInterval(checkPayPalLoaded), 10000);
+    
+    // Listen for PayPal events (if available through their API)
+    if (typeof paypal !== 'undefined') {
+        // Track PayPal payment initiation
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#paypal-container-T62JMDAV6VUBQ')) {
+                trackEvent('paypal_payment_attempt', {
+                    product: 'quiet_the_noise_ebook',
+                    price: 7.99,
+                    payment_method: 'paypal'
+                });
+            }
         });
     }
 }
 
-async function handlePurchase() {
+async function handlePurchase(paymentMethod = 'stripe') {
     const checkoutButton = document.getElementById('checkout-button');
     
     // Add loading state
@@ -197,9 +244,11 @@ async function handlePurchase() {
     checkoutButton.disabled = true;
     
     try {
-        // Track purchase attempt        trackEvent('purchase_attempt', {
+        // Track purchase attempt with payment method        
+        trackEvent('purchase_attempt', {
             product: 'quiet_the_noise_ebook',
-            price: 7.99
+            price: 7.99,
+            payment_method: paymentMethod
         });
         
         // For demo purposes, simulate checkout process
@@ -210,9 +259,10 @@ async function handlePurchase() {
         console.error('Purchase error:', error);
         showNotification('There was an error processing your payment. Please try again.', 'error');
         
-        // Track error
+        // Track error with payment method
         trackEvent('purchase_error', {
-            error: error.message
+            error: error.message,
+            payment_method: paymentMethod
         });
     } finally {
         // Remove loading state

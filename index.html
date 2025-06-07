@@ -45,9 +45,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <!-- CSS -->
+      <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
+    
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAdtIP4N39_Grc65N4rXgCcuW2TEEB5MyXfq1r3BGmNWFTaK3OMhKc_3zIZl4oI622oMTkhOcSJ_OriNo&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
@@ -417,30 +419,28 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="purchase-right">
+                  <div class="purchase-right">
                     <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Digital eBook Package</h3>                            <div class="price">
-                                <span class="price-currency">$</span>
-                                <span class="price-amount">7</span>
-                                <span class="price-cents">.99</span>
-                            </div>
-                            <p class="price-note">One-time payment • Instant access</p>
-                        </div>
                         
                         <div class="purchase-form">
-                            <button id="checkout-button" class="cta-primary-large">
-                                Get Instant Access Now
-                                <span class="cta-subtext">Secure payment via Stripe</span>
-                            </button>
+                            <div class="payment-options">
+                                <!-- Stripe Payment Button -->
+                                <div class="payment-option">
+                                </div>
+                            
+                                
+                                <!-- PayPal Payment Button -->
+                                <div class="payment-option paypal-option">
+                                    <div id="paypal-container-T62JMDAV6VUBQ" class="paypal-button-container"></div>
+                                </div>
+                            </div>
                             
                             <div class="payment-security">
                                 <div class="security-badges">
                                     <span class="security-badge">🔒 SSL Secured</span>
                                     <span class="security-badge">💳 Stripe Protected</span>
+                                    <span class="security-badge">🅿️ PayPal Secure</span>
                                 </div>
-                                <p class="security-text">Your payment information is 100% secure</p>
                             </div>
                         </div>
                         
@@ -562,5 +562,62 @@
     </footer>    <!-- JavaScript -->
     <script src="./js/config.js"></script>
     <script src="./js/main.js"></script>
+      <!-- PayPal Button Initialization -->
+    <script>
+        // Initialize PayPal button after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if PayPal SDK is loaded
+            if (typeof paypal !== 'undefined') {
+                try {
+                    paypal.HostedButtons({
+                        hostedButtonId: "T62JMDAV6VUBQ",
+                        onApprove: function(data, actions) {
+                            // Track successful PayPal payment initiation
+                            if (typeof trackEvent === 'function') {
+                                trackEvent('paypal_payment_approved', {
+                                    product: 'quiet_the_noise_ebook',
+                                    orderID: data.orderID
+                                });
+                            }
+                        },
+                        onCancel: function(data) {
+                            // Track PayPal payment cancellation
+                            if (typeof trackEvent === 'function') {
+                                trackEvent('paypal_payment_cancelled', {
+                                    product: 'quiet_the_noise_ebook'
+                                });
+                            }
+                        },
+                        onError: function(err) {
+                            // Track PayPal payment errors
+                            if (typeof trackEvent === 'function') {
+                                trackEvent('paypal_payment_error', {
+                                    product: 'quiet_the_noise_ebook',
+                                    error: err.toString()
+                                });
+                            }
+                            console.error('PayPal Error:', err);
+                        }
+                    }).render("#paypal-container-T62JMDAV6VUBQ").catch(function(err) {
+                        console.error('PayPal render error:', err);
+                        // Hide PayPal container if it fails to load
+                        const container = document.getElementById('paypal-container-T62JMDAV6VUBQ');
+                        if (container) {
+                            container.style.display = 'none';
+                        }
+                    });
+                } catch (error) {
+                    console.error('PayPal initialization error:', error);
+                }
+            } else {
+                console.warn('PayPal SDK not loaded');
+                // Hide PayPal container if SDK is not available
+                const container = document.getElementById('paypal-container-T62JMDAV6VUBQ');
+                if (container) {
+                    container.style.display = 'none';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
