@@ -68,3 +68,6 @@ jspm_packages/
 
 # WordPress theme files (since we're deploying the static version)
 wordpress-theme/
+
+# Local Netlify folder
+.netlify

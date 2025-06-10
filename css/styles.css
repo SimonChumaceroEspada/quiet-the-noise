@@ -44,6 +44,8 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
 }
 
 body {
@@ -52,6 +54,8 @@ body {
     color: var(--text-primary);
     background-color: var(--background);
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Container */
@@ -138,6 +142,7 @@ p {
     flex-direction: column;
     cursor: pointer;
     gap: 4px;
+    z-index: 1001;
 }
 
 .mobile-menu-toggle span {
@@ -145,6 +150,7 @@ p {
     height: 3px;
     background-color: var(--text-primary);
     transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
 /* Buttons */
@@ -1613,11 +1619,170 @@ p {
     white-space: nowrap;
 }
 
-/* Responsive adjustments for payment options */
+/* Mobile Navigation Styles */
 @media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 2rem 1.5rem;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-lg);
+        z-index: 999;
+    }
+    
+    .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .mobile-menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .mobile-menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+    
+    /* Hero Section Mobile */
+    .hero {
+        padding: 100px 0 60px;
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+    }
+    
+    .hero-benefits {
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .benefit-item {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+      .book-showcase {
+        max-width: 250px;
+    }
+    
+    .floating-elements {
+        display: none;
+    }
+    
+    /* Typography Mobile */
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+    }
+    
+    /* Container Mobile */
+    .container {
+        padding: 0 1rem;
+    }
+    
+    /* Trust Section Mobile */
+    .trust-indicators {
+        gap: 1.5rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .trust-item {
+        font-size: 0.85rem;
+    }
+    
+    /* Problem Grid Mobile */
+    .problem-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .problem-item {
+        padding: 1.5rem;
+    }
+    
+    /* Benefits Grid Mobile */
+    .benefits-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .benefit-card {
+        padding: 1.5rem;
+    }
+    
+    /* Preview Phases Mobile */
+    .preview-phases {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .phase-card {
+        padding: 1.5rem;
+    }
+    
+    /* Testimonials Mobile */
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .testimonial-card {
+        padding: 1.5rem;
+    }
+    
+    .social-proof-stats {
+        gap: 2rem;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* Purchase Section Mobile */
     .purchase-content {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+    
+    .purchase-title {
+        font-size: 2rem;
+        text-align: center;
     }
     
     .pricing-card {
@@ -1653,6 +1818,43 @@ p {
     .guarantee-text p {
         font-size: 0.8rem;
     }
+    
+    /* FAQ Mobile */
+    .faq-list {
+        gap: 1rem;
+    }
+    
+    .faq-question {
+        padding: 1rem 1.5rem;
+    }
+    
+    .faq-question h3 {
+        font-size: 1rem;
+    }
+    
+    .faq-toggle {
+        font-size: 1.25rem;
+    }
+    
+    /* Final CTA Mobile */
+    .final-cta-content h2 {
+        font-size: 2rem;
+    }
+    
+    .final-cta-content p {
+        font-size: 1rem;
+    }
+    
+    /* Footer Mobile */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .footer-section {
+        margin-bottom: 1rem;
+    }
 }
 
 /* Additional zoom optimizations */
@@ -1668,6 +1870,183 @@ p {
 
 /* Compact layout for smaller screens */
 @media (max-width: 480px) {
+    /* Base styles for small mobile */
+    html {
+        font-size: 14px;
+    }
+    
+    .container {
+        padding: 0 0.75rem;
+    }
+    
+    /* Header small mobile */
+    .nav-container {
+        height: 60px;
+        padding: 0 1rem;
+    }
+    
+    .logo-text {
+        font-size: 1.25rem;
+    }
+    
+    .nav-links {
+        top: 60px;
+        padding: 1.5rem 1rem;
+    }
+    
+    /* Hero small mobile */
+    .hero {
+        padding: 80px 0 40px;
+    }
+    
+    .hero-content {
+        gap: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .hero-description {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-benefits {
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+    
+    .benefit-item {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+    
+    .benefit-icon {
+        font-size: 1rem;
+    }
+    
+    .book-showcase {
+        max-width: 200px;
+    }
+    
+    /* Sections small mobile */
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* Trust section small mobile */
+    .trust-section {
+        padding: 2rem 0;
+    }
+    
+    .trust-indicators {
+        gap: 1rem;
+    }
+    
+    .trust-item {
+        font-size: 0.8rem;
+    }
+    
+    /* Problem/Solution small mobile */
+    .problem-solution {
+        padding: 3rem 0;
+    }
+    
+    .problem-item {
+        padding: 1.25rem;
+    }
+    
+    .problem-icon {
+        font-size: 2.5rem;
+    }
+    
+    .solution-intro {
+        font-size: 1rem;
+    }
+    
+    /* Benefits small mobile */
+    .benefits-section {
+        padding: 3rem 0;
+    }
+    
+    .benefit-card {
+        padding: 1.25rem;
+    }
+    
+    .benefit-number {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .benefit-header {
+        gap: 0.75rem;
+    }
+    
+    .benefit-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    /* Preview small mobile */
+    .preview-section {
+        padding: 3rem 0;
+    }
+    
+    .phase-card {
+        padding: 1.25rem;
+    }
+    
+    .preview-sample {
+        padding: 2rem 1.5rem;
+    }
+    
+    /* Testimonials small mobile */
+    .testimonials-section {
+        padding: 3rem 0;
+    }
+    
+    .testimonial-card {
+        padding: 1.25rem;
+    }
+    
+    .testimonial-text {
+        font-size: 1rem;
+    }
+    
+    .social-proof-stats {
+        gap: 1.5rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    /* Purchase small mobile */
+    .purchase-section {
+        padding: 3rem 0;
+    }
+    
+    .purchase-title {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .purchase-features {
+        gap: 0.75rem;
+    }
+    
+    .feature-item {
+        font-size: 1rem;
+        gap: 0.75rem;
+    }
+    
     .pricing-card {
         padding: 1.2rem;
     }
@@ -1676,11 +2055,243 @@ p {
         margin-bottom: 1rem;
     }
     
+    .pricing-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .price-amount {
+        font-size: 2.5rem;
+    }
+    
+    .price-currency, .price-cents {
+        font-size: 1rem;
+    }
+    
     .purchase-form {
         margin-bottom: 1rem;
     }
     
     .guarantee {
         padding-top: 1rem;
+    }
+    
+    .guarantee-badge {
+        gap: 0.5rem;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .guarantee-icon {
+        font-size: 1.25rem;
+    }
+    
+    .guarantee-text strong {
+        font-size: 0.9rem;
+    }
+    
+    .guarantee-text p {
+        font-size: 0.75rem;
+    }
+    
+    /* FAQ small mobile */
+    .faq-section {
+        padding: 3rem 0;
+    }
+    
+    .faq-question {
+        padding: 0.75rem 1rem;
+    }
+    
+    .faq-question h3 {
+        font-size: 0.95rem;
+    }
+    
+    .faq-toggle {
+        font-size: 1.25rem;
+    }
+    
+    /* Final CTA small mobile */
+    .final-cta {
+        padding: 3rem 0;
+    }
+    
+    .final-cta-content h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .final-cta-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Footer small mobile */
+    .footer {
+        padding: 2rem 0 1rem;
+    }
+    
+    .footer-content {
+        gap: 1.5rem;
+    }
+    
+    .footer-section h4 {
+        font-size: 1rem;
+    }
+    
+    /* Buttons small mobile */
+    .cta-primary, .cta-button {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+    
+    .cta-primary-large {
+        padding: 14px 28px;
+        font-size: 1rem;
+    }
+    
+    .cta-subtext {
+        font-size: 0.8rem;
+    }
+}
+
+/* Touch-friendly interactions and font smoothing */
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-primary);
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--background);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+    .cta-button:hover, 
+    .cta-primary:hover, 
+    .cta-primary-large:hover,
+    .benefit-card:hover,
+    .faq-question:hover {
+        transform: none;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .book-cover:hover {
+        transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+    }
+    
+    /* Better touch targets */
+    .nav-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .faq-question {
+        min-height: 44px;
+    }
+    
+    .cta-button, .cta-primary, .cta-primary-large {
+        min-height: 44px;
+    }
+}
+
+/* Mobile navigation overlay */
+@media (max-width: 768px) {
+    .nav-links.active::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: -1;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .nav-link {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
+        text-align: center;
+        font-size: 1.1rem;
+    }
+    
+    .nav-link:last-child {
+        border-bottom: none;
+    }
+    
+    .nav-link.cta-button {
+        margin-top: 1rem;
+        padding: 12px 24px;
+        border: none;
+        border-radius: var(--border-radius);
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+    }
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+    /* Reduce motion for better performance on mobile */
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+    }
+    
+    /* Optimize scroll behavior */
+    html {
+        scroll-behavior: auto;
+    }
+    
+    /* Better section spacing on mobile */
+    section {
+        scroll-margin-top: 80px; /* Account for fixed header */
+    }
+    
+    /* Ensure proper touch scrolling */
+    .nav-links {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+    
+    /* Optimize images for mobile */
+    .book-cover {
+        will-change: auto; /* Remove will-change on mobile for better performance */
+    }
+}
+
+/* Animation cleanup */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { 
+        opacity: 0; 
+        transform: scale(0.9); 
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
 }
