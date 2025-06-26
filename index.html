@@ -48,6 +48,9 @@
       <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
     
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAdtIP4N39_Grc65N4rXgCcuW2TEEB5MyXfq1r3BGmNWFTaK3OMhKc_3zIZl4oI622oMTkhOcSJ_OriNo&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+    
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
     <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
@@ -413,12 +416,7 @@
                                 
                                 <!-- PayPal Payment Button -->
                                 <div class="payment-option paypal-option">
-                                    <style>.pp-89JGZHVHM3LDN{text-align:center;border:none;border-radius:0.25rem;min-width:11.625rem;padding:0 2rem;height:2.625rem;font-weight:bold;background-color:#FFD140;color:#000000;font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem;line-height:1.25rem;cursor:pointer;}</style>
-                                    <form action="https://www.paypal.com/ncp/payment/89JGZHVHM3LDN" method="post" target="_blank" style="display:inline-grid;justify-items:center;align-content:start;gap:0.5rem;">
-                                        <input class="pp-89JGZHVHM3LDN" type="submit" value="Comprar ahora" />
-                                        <img src="https://www.paypalobjects.com/images/Debit_Credit.svg" alt="cards" />
-                                        <section style="font-size: 0.75rem;"> Con la tecnología de <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.875rem;vertical-align:middle;"/></section>
-                                    </form>
+                                    <div id="paypal-container-89JGZHVHM3LDN"></div>
                                 </div>
                             </div>
                             
@@ -549,31 +547,26 @@
     </footer>    <!-- JavaScript -->
     <script src="./js/config.js"></script>
     <script src="./js/main.js"></script>
-      <!-- PayPal Button Tracking -->
+      <!-- PayPal Hosted Button -->
     <script>
-        // Track PayPal button clicks
+        // Initialize PayPal hosted button
         document.addEventListener('DOMContentLoaded', function() {
-            const paypalForm = document.querySelector('form[action*="paypal.com"]');
-            if (paypalForm) {
-                paypalForm.addEventListener('submit', function() {
-                    // Track PayPal payment attempt
+            if (typeof paypal !== 'undefined') {
+                paypal.HostedButtons({
+                    hostedButtonId: "89JGZHVHM3LDN",
+                }).render("#paypal-container-89JGZHVHM3LDN").then(function() {
+                    // Track when button is successfully rendered
                     if (typeof trackEvent === 'function') {
-                        trackEvent('paypal_payment_attempt', {
+                        trackEvent('paypal_button_rendered', {
                             product: 'quiet_the_noise_ebook',
-                            price: 7.99,
-                            payment_method: 'paypal'
+                            button_id: '89JGZHVHM3LDN'
                         });
                     }
-                    
-                    // Track with Google Analytics if available
-                    if (typeof gtag !== 'undefined') {
-                        gtag('event', 'purchase_attempt', {
-                            'event_category': 'ecommerce',
-                            'event_label': 'PayPal Button Click',
-                            'value': 7.99
-                        });
-                    }
+                }).catch(function(err) {
+                    console.error('PayPal button render error:', err);
                 });
+            } else {
+                console.warn('PayPal SDK not loaded');
             }
         });
     </script>
