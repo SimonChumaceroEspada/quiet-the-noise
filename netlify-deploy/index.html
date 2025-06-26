@@ -48,9 +48,6 @@
       <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
     
-    <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAdtIP4N39_Grc65N4rXgCcuW2TEEB5MyXfq1r3BGmNWFTaK3OMhKc_3zIZl4oI622oMTkhOcSJ_OriNo&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
-    
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
     <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
@@ -416,7 +413,12 @@
                                 
                                 <!-- PayPal Payment Button -->
                                 <div class="payment-option paypal-option">
-                                    <div id="paypal-container-T62JMDAV6VUBQ" class="paypal-button-container"></div>
+                                    <style>.pp-89JGZHVHM3LDN{text-align:center;border:none;border-radius:0.25rem;min-width:11.625rem;padding:0 2rem;height:2.625rem;font-weight:bold;background-color:#FFD140;color:#000000;font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem;line-height:1.25rem;cursor:pointer;}</style>
+                                    <form action="https://www.paypal.com/ncp/payment/89JGZHVHM3LDN" method="post" target="_blank" style="display:inline-grid;justify-items:center;align-content:start;gap:0.5rem;">
+                                        <input class="pp-89JGZHVHM3LDN" type="submit" value="Comprar ahora" />
+                                        <img src="https://www.paypalobjects.com/images/Debit_Credit.svg" alt="cards" />
+                                        <section style="font-size: 0.75rem;"> Con la tecnología de <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.875rem;vertical-align:middle;"/></section>
+                                    </form>
                                 </div>
                             </div>
                             
@@ -547,60 +549,31 @@
     </footer>    <!-- JavaScript -->
     <script src="./js/config.js"></script>
     <script src="./js/main.js"></script>
-      <!-- PayPal Button Initialization -->
+      <!-- PayPal Button Tracking -->
     <script>
-        // Initialize PayPal button after DOM is loaded
+        // Track PayPal button clicks
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if PayPal SDK is loaded
-            if (typeof paypal !== 'undefined') {
-                try {
-                    paypal.HostedButtons({
-                        hostedButtonId: "T62JMDAV6VUBQ",
-                        onApprove: function(data, actions) {
-                            // Track successful PayPal payment initiation
-                            if (typeof trackEvent === 'function') {
-                                trackEvent('paypal_payment_approved', {
-                                    product: 'quiet_the_noise_ebook',
-                                    orderID: data.orderID
-                                });
-                            }
-                        },
-                        onCancel: function(data) {
-                            // Track PayPal payment cancellation
-                            if (typeof trackEvent === 'function') {
-                                trackEvent('paypal_payment_cancelled', {
-                                    product: 'quiet_the_noise_ebook'
-                                });
-                            }
-                        },
-                        onError: function(err) {
-                            // Track PayPal payment errors
-                            if (typeof trackEvent === 'function') {
-                                trackEvent('paypal_payment_error', {
-                                    product: 'quiet_the_noise_ebook',
-                                    error: err.toString()
-                                });
-                            }
-                            console.error('PayPal Error:', err);
-                        }
-                    }).render("#paypal-container-T62JMDAV6VUBQ").catch(function(err) {
-                        console.error('PayPal render error:', err);
-                        // Hide PayPal container if it fails to load
-                        const container = document.getElementById('paypal-container-T62JMDAV6VUBQ');
-                        if (container) {
-                            container.style.display = 'none';
-                        }
-                    });
-                } catch (error) {
-                    console.error('PayPal initialization error:', error);
-                }
-            } else {
-                console.warn('PayPal SDK not loaded');
-                // Hide PayPal container if SDK is not available
-                const container = document.getElementById('paypal-container-T62JMDAV6VUBQ');
-                if (container) {
-                    container.style.display = 'none';
-                }
+            const paypalForm = document.querySelector('form[action*="paypal.com"]');
+            if (paypalForm) {
+                paypalForm.addEventListener('submit', function() {
+                    // Track PayPal payment attempt
+                    if (typeof trackEvent === 'function') {
+                        trackEvent('paypal_payment_attempt', {
+                            product: 'quiet_the_noise_ebook',
+                            price: 7.99,
+                            payment_method: 'paypal'
+                        });
+                    }
+                    
+                    // Track with Google Analytics if available
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'purchase_attempt', {
+                            'event_category': 'ecommerce',
+                            'event_label': 'PayPal Button Click',
+                            'value': 7.99
+                        });
+                    }
+                });
             }
         });
     </script>
