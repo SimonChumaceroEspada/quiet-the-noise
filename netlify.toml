@@ -4,6 +4,9 @@
   
   # Folder to deploy (current folder since it's already static files)
   publish = "."
+  
+  # Functions directory
+  functions = "netlify/functions"
 
 [build.environment]
   # Node version for any build processes
