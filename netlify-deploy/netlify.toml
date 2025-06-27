@@ -2,8 +2,8 @@
   # Build command (if you had a build process)
   # command = "npm run build"
   
-  # Folder to deploy (current folder since it's already static files)
-  publish = "."
+  # Folder to deploy - Updated to use netlify-deploy folder
+  publish = "netlify-deploy"
 
 [build.environment]
   # Node version for any build processes

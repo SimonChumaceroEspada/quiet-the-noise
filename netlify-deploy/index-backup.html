@@ -48,10 +48,12 @@
       <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
     
-    <!-- Supabase -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <!-- JavaScript -->
+    <script src="./js/config.js"></script>
+    <script src="./js/database.js"></script>
+    <script src="./js/main.js"></script>
     
-    <!-- PayPal SDK - PRODUCTION -->
+    <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=BAAdtIP4N39_Grc65N4rXgCcuW2TEEB5MyXfq1r3BGmNWFTaK3OMhKc_3zIZl4oI622oMTkhOcSJ_OriNo&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
     
     <!-- Favicon -->
@@ -60,6 +62,12 @@
     
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <!-- Analytics placeholder -->
     <!-- Google Analytics will be added here -->
@@ -419,7 +427,7 @@
                                 
                                 <!-- PayPal Payment Button -->
                                 <div class="payment-option paypal-option">
-                                    <div id="paypal-container-DG2V4FLX49RM8"></div>
+                                    <div id="paypal-container-89JGZHVHM3LDN"></div>
                                 </div>
                             </div>
                             
@@ -549,178 +557,76 @@
         </div>
     </footer>    <!-- JavaScript -->
     <script src="./js/config.js"></script>
-    <script src="./js/debug-supabase.js"></script>
-    <script src="./js/debug-paypal.js"></script>
-    <script src="./js/backup-email-service.js"></script>
-    <script src="./js/system-health-monitor.js"></script>
-    <script src="./js/production-email.js"></script>
-    <script src="./js/purchase-handler.js"></script>
-    <script src="./js/production-validation.js"></script>
     <script src="./js/main.js"></script>
-      <!-- PayPal Integration with Multiple Approaches -->
+      <!-- PayPal Hosted Button -->
     <script>
-        // PayPal success callback - handles completed payments
+        // PayPal success callback
         window.onPayPalSuccess = function(details, data) {
-            console.log('🎉 PayPal SUCCESS callback triggered!');
-            console.log('PayPal Details:', details);
-            console.log('PayPal Data:', data);
+            console.log('PayPal payment successful:', details, data);
             
             // Extract customer information from PayPal response
             const customerData = {
-                name: details.payer?.name ? 
+                name: details.payer.name ? 
                       `${details.payer.name.given_name || ''} ${details.payer.name.surname || ''}`.trim() :
                       'PayPal Customer',
-                email: details.payer?.email_address || 'no-email@paypal.com',
-                transactionId: details.id || data.orderID || 'no-transaction-id',
+                email: details.payer.email_address || '',
+                transactionId: details.id || data.orderID,
                 paymentMethod: 'paypal'
             };
             
-            console.log('Customer Data Extracted:', customerData);
-            processPayPalPurchase(customerData);
-            return true;
+            // Process the successful purchase
+            handleSuccessfulPurchase(customerData).then(result => {
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Optionally redirect to a thank you page
+                    setTimeout(() => {
+                        // window.location.href = '/thank-you.html';
+                    }, 3000);
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            });
+            
+            return true; // Prevent default PayPal success behavior
         };
         
         // PayPal error callback
         window.onPayPalError = function(err) {
-            console.error('❌ PayPal payment error:', err);
-            alert('❌ Payment failed. Please try again or contact support.');
+            console.error('PayPal payment error:', err);
+            showNotification('Payment failed. Please try again or contact support.', 'error');
         };
         
         // PayPal cancel callback
         window.onPayPalCancel = function(data) {
-            console.log('❌ PayPal payment cancelled:', data);
-            alert('ℹ️ Payment was cancelled.');
+            console.log('PayPal payment cancelled:', data);
+            showNotification('Payment was cancelled.', 'info');
         };
 
-        // Process PayPal purchase
-        function processPayPalPurchase(customerData) {
-            console.log('🔄 Processing PayPal purchase:', customerData);
-            alert('🔄 Processing your purchase...');
-            
-            if (typeof handleSuccessfulPurchase === 'function') {
-                handleSuccessfulPurchase(customerData).then(result => {
-                    console.log('Purchase processing result:', result);
-                    if (result.success) {
-                        alert('✅ ' + result.message);
-                        // Redirect to thank you page after successful processing
-                        setTimeout(() => {
-                            window.location.href = '#success';
-                        }, 2000);
-                    } else {
-                        alert('❌ ' + result.message);
+        // Initialize PayPal hosted button
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof paypal !== 'undefined') {
+                paypal.HostedButtons({
+                    hostedButtonId: "89JGZHVHM3LDN",
+                    // Add callback configuration
+                    onSuccess: window.onPayPalSuccess,
+                    onError: window.onPayPalError,
+                    onCancel: window.onPayPalCancel
+                }).render("#paypal-container-89JGZHVHM3LDN").then(function() {
+                    // Track when button is successfully rendered
+                    if (typeof trackEvent === 'function') {
+                        trackEvent('paypal_button_rendered', {
+                            product: 'quiet_the_noise_ebook',
+                            button_id: '89JGZHVHM3LDN'
+                        });
                     }
-                }).catch(error => {
-                    console.error('Error processing purchase:', error);
-                    alert('❌ Error processing purchase. Please contact support with transaction ID: ' + customerData.transactionId);
+                }).catch(function(err) {
+                    console.error('PayPal button render error:', err);
                 });
             } else {
-                console.error('handleSuccessfulPurchase function not found!');
-                alert('❌ System error. Please contact support with transaction ID: ' + customerData.transactionId);
+                console.warn('PayPal SDK not loaded');
             }
-        }
-
-        // Alternative approach: Use return URL method
-        function checkForPayPalReturn() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentId = urlParams.get('paymentId');
-            const token = urlParams.get('token');
-            const PayerID = urlParams.get('PayerID');
-            
-            if (paymentId || token) {
-                console.log('🔍 Detected PayPal return with parameters:', {paymentId, token, PayerID});
-                
-                // Simulate success with available data
-                const customerData = {
-                    name: 'PayPal Customer',
-                    email: 'customer@paypal.com',
-                    transactionId: paymentId || token || 'url-return-' + Date.now(),
-                    paymentMethod: 'paypal'
-                };
-                
-                processPayPalPurchase(customerData);
-                
-                // Clean URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        }
-
-        // Initialize PayPal buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Initializing PayPal integration...');
-            
-            // Check if we're returning from PayPal
-            checkForPayPalReturn();
-            
-            // Forzar el uso de botones nativos para asegurar callbacks
-            setTimeout(() => {
-                console.log('🔄 Force rendering NATIVE PayPal buttons for proper callbacks...');
-                renderNativePayPalButton();
-            }, 2000);
-            
-            // Backup render en caso de que falle el primero
-            setTimeout(() => {
-                const container = document.getElementById('paypal-container-DG2V4FLX49RM8');
-                if (container && (!container.innerHTML.trim() || container.innerHTML.includes('Error'))) {
-                    console.log('🔄 Retry rendering PayPal buttons...');
-                    renderNativePayPalButton();
-                }
-            }, 5000);
         });
-        
-        // Fallback: Native PayPal button
-        function renderNativePayPalButton() {
-            console.log('🔄 Rendering native PayPal button as fallback...');
-            
-            // Create a fallback container
-            const container = document.getElementById('paypal-container-DG2V4FLX49RM8');
-            if (container && typeof paypal !== 'undefined' && paypal.Buttons) {
-                container.innerHTML = ''; // Clear hosted button
-                
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        console.log('🛒 Creating PayPal order...');
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: '7.99',
-                                    currency_code: 'USD'
-                                },
-                                description: 'Quiet the Noise: 30 Days to Mental Clarity eBook'
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        console.log('✅ PayPal payment approved:', data);
-                        return actions.order.capture().then(function(details) {
-                            console.log('💰 PayPal payment captured:', details);
-                            
-                            const customerData = {
-                                name: details.payer?.name ? 
-                                      `${details.payer.name.given_name || ''} ${details.payer.name.surname || ''}`.trim() :
-                                      'PayPal Customer',
-                                email: details.payer?.email_address || 'no-email@paypal.com',
-                                transactionId: details.id || data.orderID,
-                                paymentMethod: 'paypal_native'
-                            };
-                            
-                            processPayPalPurchase(customerData);
-                        });
-                    },
-                    onError: function(err) {
-                        console.error('❌ PayPal native button error:', err);
-                        alert('❌ Payment failed. Please try again or contact support.');
-                    },
-                    onCancel: function(data) {
-                        console.log('❌ PayPal payment cancelled:', data);
-                        alert('ℹ️ Payment was cancelled.');
-                    }
-                }).render('#paypal-container-DG2V4FLX49RM8').then(function() {
-                    console.log('✅ PayPal native button rendered successfully');
-                }).catch(function(err) {
-                    console.error('❌ PayPal native button render failed:', err);
-                });
-            }
-        }
     </script>
 </body>
 </html>
