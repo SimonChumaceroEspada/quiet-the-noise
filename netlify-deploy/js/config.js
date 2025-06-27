@@ -9,6 +9,15 @@ const CONFIG = {
     // Payment
     STRIPE_PUBLISHABLE_KEY: 'pk_test_YOUR_STRIPE_KEY_HERE', // Replace with your Stripe key
     
+    // Supabase Configuration
+    SUPABASE_URL: 'https://your-project.supabase.co', // Replace with your Supabase URL
+    SUPABASE_ANON_KEY: 'your-anon-key-here', // Replace with your Supabase anon key
+    
+    // EmailJS Configuration
+    EMAILJS_SERVICE_ID: 'your-service-id', // Replace with your EmailJS service ID
+    EMAILJS_TEMPLATE_ID: 'your-template-id', // Replace with your EmailJS template ID
+    EMAILJS_PUBLIC_KEY: 'your-public-key', // Replace with your EmailJS public key
+    
     // Features
     ENABLE_AB_TESTING: true,
     ENABLE_EXIT_INTENT: false, // Set to true to enable exit intent modal

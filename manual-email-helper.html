@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Email Helper - Quiet the Noise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007cba;
+        }
+        .email-template {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: Georgia, serif;
+        }
+        .button {
+            background: #007cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #005a87;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        code {
+            background: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>📧 Manual Email Helper</h1>
+    <p class="info">Use this page to manually send the eBook to customers while we fix the automated system.</p>
+
+    <div class="section">
+        <h2>🎯 Current Test Customer</h2>
+        <p><strong>Name:</strong> Simon Chumacero</p>
+        <p><strong>Email:</strong> <code>simonchumacero26@gmail.com</code></p>
+        <p><strong>Transaction ID:</strong> <span id="transaction-id">MANUAL-TEST-<script>document.write(Date.now())</script></span></p>
+    </div>
+
+    <div class="section">
+        <h2>📋 Steps to Send Email</h2>
+        <ol>
+            <li><strong>Open Gmail:</strong> <a href="https://gmail.com" target="_blank" class="button">Open Gmail</a></li>
+            <li><strong>Login with:</strong> <code>clarityreads26@gmail.com</code></li>
+            <li><strong>Compose new email</strong></li>
+            <li><strong>Copy the template below</strong></li>
+            <li><strong>Attach the eBook file</strong> (book/QuietTheNoise.zip)</li>
+            <li><strong>Send the email</strong></li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>📝 Email Template</h2>
+        <p><strong>To:</strong> <code>simonchumacero26@gmail.com</code></p>
+        <p><strong>Subject:</strong> <code>Quiet the Noise - Your eBook is Ready!</code></p>
+        <p><strong>Attachment:</strong> <code>book/QuietTheNoise.zip</code></p>
+        
+        <div class="email-template" id="email-template">
+Dear Simon,
+
+Thank you for purchasing "Quiet the Noise"!
+
+Your eBook is attached to this email. The download includes:
+• Complete PDF version of the book
+• EPUB format for mobile devices  
+• Bonus materials and worksheets
+
+Your transaction has been processed successfully.
+Transaction ID: <span id="template-transaction-id">MANUAL-TEST-<script>document.write(Date.now())</script></span>
+
+If you have any questions or issues accessing the book, please reply to this email.
+
+Best regards,
+The Quiet the Noise Team
+
+---
+Thank you for your purchase! Enjoy your journey to a quieter, more focused life.
+        </div>
+        
+        <button class="button" onclick="copyTemplate()">📋 Copy Email Template</button>
+    </div>
+
+    <div class="section">
+        <h2>📂 File Location</h2>
+        <p><strong>eBook File:</strong> <code>c:\Users\SIMON\OneDrive\Escritorio\79\quiet-the-noise\book\QuietTheNoise.zip</code></p>
+        <p class="info">💡 This is the file you need to attach to the email.</p>
+    </div>
+
+    <div class="section">
+        <h2>✅ After Sending</h2>
+        <p>Once you've sent the email successfully:</p>
+        <ol>
+            <li>✅ Mark this test as completed</li>
+            <li>✅ Check that Simon receives the email</li>
+            <li>✅ Verify the eBook file downloads correctly</li>
+            <li>✅ Confirm all links and content work</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Next Steps for Automation</h2>
+        <p>To fully automate email sending, we need to implement one of these solutions:</p>
+        <ul>
+            <li><strong>Option 1:</strong> Set up Supabase Edge Functions</li>
+            <li><strong>Option 2:</strong> Use EmailJS service</li>
+            <li><strong>Option 3:</strong> Create a server-side email API</li>
+            <li><strong>Option 4:</strong> Use a service like SendGrid or Mailgun</li>
+        </ul>
+        <p class="info">For now, manual sending works perfectly for testing and small volumes!</p>
+    </div>
+
+    <script>
+        function copyTemplate() {
+            const template = document.getElementById('email-template').innerText;
+            navigator.clipboard.writeText(template).then(function() {
+                alert('✅ Email template copied to clipboard!\n\nNow paste it into Gmail.');
+            }, function(err) {
+                alert('❌ Could not copy template. Please select and copy manually.');
+            });
+        }
+        
+        // Update transaction IDs to be consistent
+        const transactionId = 'MANUAL-TEST-' + Date.now();
+        document.getElementById('transaction-id').textContent = transactionId;
+        document.getElementById('template-transaction-id').textContent = transactionId;
+    </script>
+</body>
+</html>

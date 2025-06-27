@@ -173,6 +173,37 @@ Replace placeholder content in the legal pages and contact information:
 - [ ] Test contact forms and email delivery
 - [ ] Verify analytics tracking is working
 
+## 🧪 Testing & Debugging Tools
+
+### Quick Setup Validation
+```bash
+# Run the automated setup script
+./setup-and-validate.sh
+```
+
+### Testing Tools
+- **`test-purchase-flow.html`** - Comprehensive test page for the purchase flow
+- **`validate-setup.sh`** - Automated validation of file structure and functions
+- **`setup-and-validate.sh`** - Interactive setup and testing script
+
+### Database Setup
+- **`supabase-tables-setup.sql`** - SQL commands to create required database tables
+- **`TROUBLESHOOTING.md`** - Comprehensive troubleshooting guide
+
+### Testing the Purchase Flow
+1. Open `test-purchase-flow.html` in your browser
+2. Run "Check System Components" to verify setup
+3. Test Supabase connection and database operations
+4. Simulate purchase flow to ensure everything works
+5. View and manage test data in the database
+
+### Debugging Steps
+1. **System Check**: Verify all libraries and configs are loaded
+2. **Database Connection**: Test Supabase connection and table access
+3. **Purchase Simulation**: Test the complete purchase flow end-to-end
+4. **Data Verification**: Check that data is being saved correctly
+5. **Email Testing**: Verify email sending functionality
+
 ## 🛠 Implementation Options
 
 ### Option 1: WordPress (Recommended)

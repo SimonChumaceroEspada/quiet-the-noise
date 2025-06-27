@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Gracias por tu compra! - Quiet the Noise</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+</head>
+<body>
+    <main class="thank-you-page">
+        <div class="container">
+            <div class="thank-you-content">
+                <div class="success-icon">✅</div>
+                <h1>¡Compra Completada!</h1>
+                <p class="success-message">
+                    Tu eBook "Quiet the Noise" ha sido enviado a tu correo electrónico.
+                </p>
+                
+                <div class="next-steps">
+                    <h2>Próximos pasos:</h2>
+                    <div class="steps-grid">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <h3>Revisa tu email</h3>
+                            <p>Recibirás el enlace de descarga en los próximos minutos</p>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <h3>Descarga tu eBook</h3>
+                            <p>Disponible en formato PDF, ePub y Kindle</p>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <h3>Comienza tu transformación</h3>
+                            <p>30 días hacia la claridad mental te esperan</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="support-info">
+                    <h3>¿Necesitas ayuda?</h3>
+                    <p>Si no recibes tu eBook en los próximos 15 minutos, contáctanos:</p>
+                    <a href="mailto:support@quietthenoise.com" class="support-email">
+                        support@quietthenoise.com
+                    </a>
+                </div>
+                
+                <a href="index.html" class="back-home-btn">Volver al inicio</a>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .thank-you-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .thank-you-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .thank-you-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .next-steps {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        
+        .steps-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-align: left;
+        }
+        
+        .step-number {
+            background: #10b981;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .step p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .support-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        
+        .support-email {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .back-home-btn {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .back-home-btn:hover {
+            background: #059669;
+        }
+        
+        @media (max-width: 768px) {
+            .thank-you-content h1 {
+                font-size: 2rem;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</body>
+</html>

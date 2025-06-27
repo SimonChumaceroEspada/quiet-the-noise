@@ -29,13 +29,9 @@ const CONFIG = {
     SUPPORT_EMAIL: 'support@quietthenoise.com',
     REFUNDS_EMAIL: 'refunds@quietthenoise.com',
     BUSINESS_NAME: 'Quiet the Noise',
-    // Product Details
+      // Product Details
     BOOK_PRICE: 7.99,
     BOOK_CURRENCY: 'USD',
-    
-    // Download Configuration
-    EBOOK_DOWNLOAD_URL: 'https://drive.google.com/uc?export=download&id=REPLACE_WITH_YOUR_FILE_ID', // Update this with your Google Drive file ID
-    EBOOK_FILENAME: 'QuietTheNoise.zip',
     
     // SEO
     SITE_URL: 'https://quietthenoise.com',

@@ -48,6 +48,11 @@
       <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
     
+    <!-- JavaScript -->
+    <script src="./js/config.js"></script>
+    <script src="./js/database.js"></script>
+    <script src="./js/main.js"></script>
+    
     <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=BAAdtIP4N39_Grc65N4rXgCcuW2TEEB5MyXfq1r3BGmNWFTaK3OMhKc_3zIZl4oI622oMTkhOcSJ_OriNo&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
     
@@ -57,6 +62,12 @@
     
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <!-- Analytics placeholder -->
     <!-- Google Analytics will be added here -->
@@ -549,11 +560,58 @@
     <script src="./js/main.js"></script>
       <!-- PayPal Hosted Button -->
     <script>
+        // PayPal success callback
+        window.onPayPalSuccess = function(details, data) {
+            console.log('PayPal payment successful:', details, data);
+            
+            // Extract customer information from PayPal response
+            const customerData = {
+                name: details.payer.name ? 
+                      `${details.payer.name.given_name || ''} ${details.payer.name.surname || ''}`.trim() :
+                      'PayPal Customer',
+                email: details.payer.email_address || '',
+                transactionId: details.id || data.orderID,
+                paymentMethod: 'paypal'
+            };
+            
+            // Process the successful purchase
+            handleSuccessfulPurchase(customerData).then(result => {
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    
+                    // Optionally redirect to a thank you page
+                    setTimeout(() => {
+                        // window.location.href = '/thank-you.html';
+                    }, 3000);
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            });
+            
+            return true; // Prevent default PayPal success behavior
+        };
+        
+        // PayPal error callback
+        window.onPayPalError = function(err) {
+            console.error('PayPal payment error:', err);
+            showNotification('Payment failed. Please try again or contact support.', 'error');
+        };
+        
+        // PayPal cancel callback
+        window.onPayPalCancel = function(data) {
+            console.log('PayPal payment cancelled:', data);
+            showNotification('Payment was cancelled.', 'info');
+        };
+
         // Initialize PayPal hosted button
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof paypal !== 'undefined') {
                 paypal.HostedButtons({
                     hostedButtonId: "89JGZHVHM3LDN",
+                    // Add callback configuration
+                    onSuccess: window.onPayPalSuccess,
+                    onError: window.onPayPalError,
+                    onCancel: window.onPayPalCancel
                 }).render("#paypal-container-89JGZHVHM3LDN").then(function() {
                     // Track when button is successfully rendered
                     if (typeof trackEvent === 'function') {

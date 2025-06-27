@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Purchase Flow - Quiet the Noise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .test-button {
+            background: #007cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background: #005a87;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        #test-results {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            min-height: 200px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Purchase Flow - Quiet the Noise</h1>
+    
+    <div class="test-section">
+        <h2>🔧 System Checks</h2>
+        <button class="test-button" onclick="testSystemComponents()">Check System Components</button>
+        <button class="test-button" onclick="testSupabaseConnection()">Test Supabase Connection</button>
+        <button class="test-button" onclick="testEmailConfig()">Test Email Configuration</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔍 Email Debug</h2>
+        <button class="test-button" onclick="debugEmailSystem()">Debug Email System</button>
+        <button class="test-button" onclick="checkSupabaseEdgeFunctions()">Check Supabase Edge Functions</button>
+        <button class="test-button" onclick="testDirectEmail()">Test Direct Email (Alternative Method)</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎯 Real Email Test</h2>
+        <button class="test-button" onclick="testProductionEmail()">🏆 Test PRODUCTION Email (For Real Customers)</button>
+        <button class="test-button" onclick="testDirectEmailMethod()">🚀 Test DIRECT Email Method</button>
+        <button class="test-button" onclick="testSimpleWorkingEmail()">💯 Test SIMPLE Working Email</button>
+        <button class="test-button" onclick="testReliableEmailService()">⭐ Test Reliable Email Service</button>
+        <button class="test-button" onclick="testEmailJSService()">🚀 Test EmailJS Service</button>
+        <button class="test-button" onclick="testRealEmailToSimon()">Full Test: Database + Email to Simon</button>
+        <button class="test-button" onclick="simulateRealPurchaseForSimon()">Complete Purchase Test via handleSuccessfulPurchase</button>
+        <button class="test-button" onclick="testAutomaticEmailOnly()">🚀 Test AUTOMATIC Email Only</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>💳 Purchase Flow Tests</h2>
+        <button class="test-button" onclick="simulatePurchase()">Simulate Purchase</button>
+        <button class="test-button" onclick="testDatabaseSave()">Test Database Save</button>
+        <button class="test-button" onclick="testEmailSend()">Test Email Send</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Supabase Data</h2>
+        <button class="test-button" onclick="viewRecentPurchases()">View Recent Purchases</button>
+        <button class="test-button" onclick="viewPendingEmails()">View Pending Emails</button>
+        <button class="test-button" onclick="clearTestData()">Clear Test Data</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🛠️ Debug Tools</h2>
+        <button class="test-button" onclick="debugSupabaseSetup()">Debug Supabase Setup</button>
+        <button class="test-button" onclick="testTableStructure()">Test Table Structure</button>
+    </div>
+    
+    <div id="test-results"></div>
+
+    <!-- Include Dependencies -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/production-email.js"></script>
+    <script src="./js/simple-working-email.js"></script>
+    <script src="./js/reliable-email.js"></script>
+    <script src="./js/emailjs-service.js"></script>
+    <script src="./js/purchase-handler.js"></script>
+    <script src="./js/simple-auto-email.js"></script>
+    <script src="./js/email-alternative.js"></script>
+    
+    <script>
+        const resultsDiv = document.getElementById('test-results');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            const logMessage = `[${timestamp}] ${prefix} ${message}\n`;
+            resultsDiv.textContent += logMessage;
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+            console.log(logMessage);
+        }
+        
+        function clearResults() {
+            resultsDiv.textContent = '';
+        }
+        
+        // Test system components
+        async function testSystemComponents() {
+            clearResults();
+            log('🔍 Testing system components...');
+            
+            // Check if Supabase is loaded
+            if (typeof window.supabase === 'undefined') {
+                log('❌ Supabase library NOT loaded', 'error');
+            } else {
+                log('✅ Supabase library loaded', 'success');
+            }
+            
+            // Check if config is loaded
+            if (typeof CONFIG === 'undefined') {
+                log('❌ CONFIG not loaded', 'error');
+            } else {
+                log('✅ CONFIG loaded', 'success');
+                log(`   Supabase URL: ${CONFIG.SUPABASE_URL}`);
+                log(`   Email configured: ${CONFIG.SMTP_EMAIL}`);
+            }
+            
+            // Check if purchase handler is loaded
+            if (typeof handleSuccessfulPurchase === 'undefined') {
+                log('❌ handleSuccessfulPurchase function NOT loaded', 'error');
+            } else {
+                log('✅ handleSuccessfulPurchase function loaded', 'success');
+            }
+            
+            // Check if global supabase is initialized
+            if (typeof supabase === 'undefined') {
+                log('❌ Global supabase variable not initialized', 'error');
+            } else {
+                log('✅ Global supabase variable initialized', 'success');
+            }
+        }
+        
+        // Test Supabase connection
+        async function testSupabaseConnection() {
+            clearResults();
+            log('🔗 Testing Supabase connection...');
+            
+            try {
+                if (!supabase) {
+                    throw new Error('Supabase not initialized');
+                }
+                
+                // Test purchases table access
+                const { data: purchasesData, error: purchasesError } = await supabase
+                    .from('purchases')
+                    .select('*')
+                    .limit(1);
+                
+                if (purchasesError) {
+                    log(`❌ Purchases table error: ${purchasesError.message}`, 'error');
+                    log(`   Error details: ${JSON.stringify(purchasesError, null, 2)}`);
+                } else {
+                    log('✅ Purchases table accessible', 'success');
+                    log(`   Current purchases count: ${purchasesData.length === 0 ? '0 (empty)' : 'has data'}`);
+                }
+                
+                // Test pending_emails table access
+                const { data: emailsData, error: emailsError } = await supabase
+                    .from('pending_emails')
+                    .select('*')
+                    .limit(1);
+                
+                if (emailsError) {
+                    log(`❌ Pending emails table error: ${emailsError.message}`, 'error');
+                    log(`   Error details: ${JSON.stringify(emailsError, null, 2)}`);
+                } else {
+                    log('✅ Pending emails table accessible', 'success');
+                    log(`   Current emails count: ${emailsData.length === 0 ? '0 (empty)' : 'has data'}`);
+                }
+                
+                if (!purchasesError && !emailsError) {
+                    log('🎉 Supabase connection fully successful!', 'success');
+                }
+                
+            } catch (error) {
+                log(`❌ Supabase connection failed: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test email configuration
+        async function testEmailConfig() {
+            clearResults();
+            log('📧 Testing email configuration...');
+            
+            if (!CONFIG.SMTP_EMAIL || !CONFIG.SMTP_PASSWORD) {
+                log('❌ Email configuration missing', 'error');
+                return;
+            }
+            
+            log(`✅ Email configured: ${CONFIG.SMTP_EMAIL}`, 'success');
+            log(`✅ Password configured: ${CONFIG.SMTP_PASSWORD ? 'Yes' : 'No'}`, CONFIG.SMTP_PASSWORD ? 'success' : 'error');
+            
+            // Note: We can't actually test SMTP from browser, but we can check config
+            log('ℹ️ Note: Actual SMTP testing requires server-side implementation');
+        }
+        
+        // Simulate a purchase
+        async function simulatePurchase() {
+            clearResults();
+            log('🛒 Simulating purchase...');
+            
+            const testCustomerData = {
+                name: 'Test Customer',
+                email: 'test@example.com',
+                transactionId: 'TEST-' + Date.now(),
+                paymentMethod: 'paypal_test'
+            };
+            
+            try {
+                log('Calling handleSuccessfulPurchase...');
+                const result = await handleSuccessfulPurchase(testCustomerData);
+                
+                if (result.success) {
+                    log('✅ Purchase simulation successful', 'success');
+                    log(`   Message: ${result.message}`);
+                } else {
+                    log('❌ Purchase simulation failed', 'error');
+                    log(`   Message: ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ Purchase simulation error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test database save
+        async function testDatabaseSave() {
+            clearResults();
+            log('💾 Testing database save...');
+            
+            const testData = {
+                name: 'Database Test User',
+                email: 'dbtest@example.com',
+                transactionId: 'DBTEST-' + Date.now(),
+                paymentMethod: 'test'
+            };
+            
+            try {
+                log('Attempting to save test purchase data...');
+                
+                if (!supabase) {
+                    throw new Error('Supabase not initialized');
+                }
+                
+                const { data, error } = await supabase
+                    .from('purchases')
+                    .insert([
+                        {
+                            name: testData.name,
+                            email: testData.email,
+                            paypal_transaction_id: testData.transactionId,
+                            purchase_date: new Date().toISOString(),
+                            book_sent: false
+                        }
+                    ])
+                    .select();
+                
+                if (error) {
+                    log(`❌ Database save error: ${error.message}`, 'error');
+                    log(`   Error details: ${JSON.stringify(error, null, 2)}`);
+                    return;
+                }
+                
+                log('✅ Database save successful!', 'success');
+                log(`   Saved record ID: ${data[0].id}`);
+                log(`   Data: ${JSON.stringify(data[0], null, 2)}`);
+                
+            } catch (error) {
+                log(`❌ Database save test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test email send
+        async function testEmailSend() {
+            clearResults();
+            log('📨 Testing email send...');
+            
+            const testData = {
+                name: 'Simon Chumacero (Test)',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'EMAILTEST-' + Date.now(),
+                id: 999
+            };
+            
+            try {
+                log('Attempting to send test email...');
+                const result = await sendEBookEmail(testData);
+                
+                if (result.success) {
+                    log('✅ Email send test successful', 'success');
+                    log(`   Message: ${result.message}`);
+                } else {
+                    log('❌ Email send test failed', 'error');
+                    log(`   Message: ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ Email send test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Debug email system
+        async function debugEmailSystem() {
+            clearResults();
+            log('🔍 Debugging email system...');
+            
+            try {
+                log('📧 Checking email configuration...');
+                log(`   SMTP Email: ${CONFIG.SMTP_EMAIL}`);
+                log(`   SMTP Password: ${CONFIG.SMTP_PASSWORD ? 'Present' : 'Missing'}`);
+                
+                log('🔗 Testing Supabase Edge Function...');
+                const { data, error } = await supabase.functions.invoke('send-ebook-email', {
+                    body: {
+                        to_email: 'test@example.com',
+                        to_name: 'Test User',
+                        transaction_id: 'DEBUG-TEST'
+                    }
+                });
+                
+                if (error) {
+                    log(`❌ Edge Function Error: ${error.message}`, 'error');
+                    log(`   Error Details: ${JSON.stringify(error, null, 2)}`);
+                    log('⚠️  This explains why emails are not being sent!', 'error');
+                } else {
+                    log('✅ Edge Function is working', 'success');
+                    log(`   Response: ${JSON.stringify(data, null, 2)}`);
+                }
+                
+                log('📋 Checking pending emails table...');
+                const { data: pendingData, error: pendingError } = await supabase
+                    .from('pending_emails')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                    
+                if (pendingError) {
+                    log(`❌ Pending emails error: ${pendingError.message}`, 'error');
+                } else {
+                    log(`✅ Found ${pendingData.length} pending emails`, 'success');
+                    pendingData.forEach((email, index) => {
+                        log(`   ${index + 1}. ${email.name} (${email.email}) - ${email.status}`);
+                    });
+                }
+                
+            } catch (error) {
+                log(`❌ Debug error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Check Supabase Edge Functions
+        async function checkSupabaseEdgeFunctions() {
+            clearResults();
+            log('⚡ Checking Supabase Edge Functions...');
+            
+            try {
+                // List available functions (this may not work from client)
+                log('🔍 Attempting to test edge function availability...');
+                
+                const testFunctions = ['send-ebook-email', 'send-email', 'email-sender'];
+                
+                for (const functionName of testFunctions) {
+                    try {
+                        log(`Testing function: ${functionName}`);
+                        const { data, error } = await supabase.functions.invoke(functionName, {
+                            body: { test: true }
+                        });
+                        
+                        if (error) {
+                            if (error.message.includes('not found') || error.message.includes('404')) {
+                                log(`❌ Function '${functionName}' not found`, 'error');
+                            } else {
+                                log(`⚠️ Function '${functionName}' exists but returned error: ${error.message}`);
+                            }
+                        } else {
+                            log(`✅ Function '${functionName}' is available`, 'success');
+                        }
+                    } catch (err) {
+                        log(`❌ Error testing '${functionName}': ${err.message}`, 'error');
+                    }
+                }
+                
+                log('💡 SOLUTION: You need to create a Supabase Edge Function', 'info');
+                log('   OR implement an alternative email sending method');
+                
+            } catch (error) {
+                log(`❌ Edge function check error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Test direct email (alternative method)
+        async function testDirectEmail() {
+            clearResults();
+            log('📨 Testing ENHANCED email method...');
+            
+            try {
+                const emailData = {
+                    name: 'Simon Chumacero',
+                    email: 'simonchumacero26@gmail.com',
+                    transactionId: 'ENHANCED-TEST-' + Date.now()
+                };
+                
+                log('� Starting enhanced email test...');
+                log(`   To: ${emailData.email}`);
+                log(`   Name: ${emailData.name}`);
+                log(`   Transaction: ${emailData.transactionId}`);
+                
+                // Use the enhanced email method
+                const result = await sendEBookEmailEnhanced(emailData);
+                
+                if (result.success) {
+                    log('✅ Enhanced email test successful!', 'success');
+                    log(`   Message: ${result.message}`);
+                    if (result.method === 'alternative_queued') {
+                        log('� Email queued for manual processing', 'info');
+                        log('⏰ Check "View Pending Emails" to see the queue');
+                    }
+                } else {
+                    log('❌ Enhanced email test failed', 'error');
+                    log(`   Message: ${result.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Enhanced email test error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Test automatic email only
+        async function testAutomaticEmailOnly() {
+            clearResults();
+            log('🚀 Testing AUTOMATIC email sending...');
+            
+            const testData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'AUTO-TEST-' + Date.now(),
+                paymentMethod: 'automatic_test'
+            };
+            
+            try {
+                log('⚡ Starting automatic email process...');
+                log(`   To: ${testData.email}`);
+                log(`   Transaction: ${testData.transactionId}`);
+                
+                // Use the sendEBookEmail function directly (which has the automatic logic)
+                log('🔄 Using sendEBookEmail function...');
+                const result = await sendEBookEmail(testData);
+                
+                if (result.success) {
+                    log('✅ AUTOMATIC EMAIL SENT SUCCESSFULLY!', 'success');
+                    log(`   Service: ${result.service || 'automatic'}`);
+                    log(`   Message: ${result.message}`);
+                    log('📬 Check your email: simonchumacero26@gmail.com');
+                    log('⏰ Email should arrive within 2-5 minutes');
+                } else {
+                    log('❌ Automatic email failed', 'error');
+                    log(`   Message: ${result.message}`);
+                    
+                    // Try the simple automatic service directly
+                    if (typeof sendEmailSimpleAutomatic !== 'undefined') {
+                        log('🔄 Trying simple automatic service directly...');
+                        const simpleResult = await sendEmailSimpleAutomatic(testData);
+                        
+                        if (simpleResult.success) {
+                            log('✅ SIMPLE AUTOMATIC EMAIL SUCCESSFUL!', 'success');
+                            log(`   Service: ${simpleResult.service}`);
+                            log(`   Message: ${simpleResult.message}`);
+                        } else {
+                            log('❌ Simple automatic also failed', 'error');
+                            log(`   Message: ${simpleResult.message}`);
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ Automatic email test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+                
+                // Try manual FormSubmit as last resort
+                try {
+                    log('🔄 Trying manual FormSubmit as last resort...');
+                    
+                    const formData = new FormData();
+                    formData.append('_to', testData.email);
+                    formData.append('_subject', 'Your Quiet the Noise eBook is Ready!');
+                    formData.append('name', testData.name);
+                    formData.append('email', testData.email);
+                    formData.append('message', `Dear ${testData.name}, Your eBook is ready! Download: ${window.location.origin}/book/QuietTheNoise.zip Transaction: ${testData.transactionId}`);
+                    formData.append('_next', window.location.href);
+                    formData.append('_captcha', 'false');
+
+                    const response = await fetch(`https://formsubmit.co/${testData.email}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        log('✅ FORMSUBMIT MANUAL SUCCESS!', 'success');
+                        log('   Email sent via FormSubmit manual method');
+                        log('📬 Check your email in 2-5 minutes');
+                    } else {
+                        log('❌ FormSubmit manual also failed', 'error');
+                    }
+                    
+                } catch (manualError) {
+                    log(`❌ Manual FormSubmit failed: ${manualError.message}`, 'error');
+                }
+            }
+        }
+        
+        // Test Production Email - The final version for real customers
+        async function testProductionEmail() {
+            clearResults();
+            log('🏆 Testing PRODUCTION email (customer-ready)...');
+            
+            const testData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'PROD-TEST-' + Date.now(),
+                paymentMethod: 'production_test'
+            };
+            
+            try {
+                log('⚡ Starting production email process...');
+                log(`   To: ${testData.email}`);
+                log(`   Transaction: ${testData.transactionId}`);
+                log('🎯 This is exactly what your customers will receive!');
+                
+                // Check if production email service is loaded
+                if (typeof sendProductionEmail === 'undefined') {
+                    log('❌ Production email service not loaded', 'error');
+                    return;
+                }
+                
+                log('✅ Production email service loaded', 'success');
+                
+                log('🔄 Sending production-ready email...');
+                const productionResult = await sendProductionEmail(testData);
+                
+                if (productionResult.success) {
+                    log('✅ PRODUCTION EMAIL SENT SUCCESSFULLY!', 'success');
+                    log(`   Service: ${productionResult.service}`);
+                    log(`   Message: ${productionResult.message}`);
+                    log('📬 Check your email: simonchumacero26@gmail.com');
+                    log('⏰ This is exactly what customers will receive!');
+                    log('🎉 Email delivery system is ready for real customers!');
+                } else {
+                    log('❌ Production email test failed', 'error');
+                    log(`   Message: ${productionResult.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Production email test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test Direct Email Method - Using multiple services
+        async function testDirectEmailMethod() {
+            clearResults();
+            log('🚀 Testing DIRECT email method...');
+            
+            const testData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'DIRECT-TEST-' + Date.now(),
+                paymentMethod: 'direct_test'
+            };
+            
+            const emailContent = `Dear ${testData.name},
+
+🎉 Thank you for purchasing "Quiet the Noise"!
+
+📚 DOWNLOAD YOUR EBOOK NOW:
+https://drive.google.com/uc?export=download&id=1qP9cGI88s_UfZ0vsOLiypw5llRVpVzO1
+
+Transaction ID: ${testData.transactionId}
+Purchase Date: ${new Date().toLocaleString()}
+
+Best regards,
+The Quiet the Noise Team`;
+
+            try {
+                log('⚡ Starting direct email test...');
+                log(`   To: ${testData.email}`);
+                log(`   Transaction: ${testData.transactionId}`);
+                
+                // Method 1: Try Netlify Forms (works if hosted on Netlify)
+                log('📧 Method 1: Trying Netlify Forms...');
+                
+                try {
+                    const netlifyData = new URLSearchParams();
+                    netlifyData.append('form-name', 'ebook-delivery');
+                    netlifyData.append('email', testData.email);
+                    netlifyData.append('name', testData.name);
+                    netlifyData.append('message', emailContent);
+                    netlifyData.append('subject', 'Your Quiet the Noise eBook is Ready!');
+                    
+                    const netlifyResponse = await fetch('/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: netlifyData
+                    });
+                    
+                    log(`   Netlify status: ${netlifyResponse.status}`);
+                    
+                    if (netlifyResponse.ok) {
+                        log('✅ NETLIFY FORMS SUCCESS!', 'success');
+                        log('   Email sent via Netlify Forms!');
+                        log('📬 Check your email in 2-5 minutes');
+                        return;
+                    }
+                } catch (netlifyError) {
+                    log(`   Netlify failed: ${netlifyError.message}`);
+                }
+                
+                // Method 2: Try Web3Forms with a different access key
+                log('📧 Method 2: Trying Web3Forms...');
+                
+                try {
+                    const web3Response = await fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            access_key: 'YOUR_ACCESS_KEY_HERE', // You'd need to get this from web3forms.com
+                            name: testData.name,
+                            email: testData.email,
+                            subject: 'Your Quiet the Noise eBook is Ready!',
+                            message: emailContent,
+                            from_name: 'Quiet the Noise Team',
+                            to_email: testData.email
+                        })
+                    });
+                    
+                    log(`   Web3Forms status: ${web3Response.status}`);
+                    const web3Text = await web3Response.text();
+                    log(`   Web3Forms response: ${web3Text}`);
+                    
+                    if (web3Response.ok) {
+                        const web3Result = JSON.parse(web3Text);
+                        if (web3Result.success) {
+                            log('✅ WEB3FORMS SUCCESS!', 'success');
+                            log('   Email sent via Web3Forms!');
+                            log('📬 Check your email in 2-5 minutes');
+                            return;
+                        }
+                    }
+                } catch (web3Error) {
+                    log(`   Web3Forms failed: ${web3Error.message}`);
+                }
+                
+                // Method 3: Try FormSubmit direct
+                log('📧 Method 3: Trying FormSubmit...');
+                
+                try {
+                    const formData = new FormData();
+                    formData.append('_to', testData.email);
+                    formData.append('_subject', 'Your Quiet the Noise eBook is Ready!');
+                    formData.append('name', testData.name);
+                    formData.append('email', testData.email);
+                    formData.append('message', emailContent);
+                    formData.append('_next', window.location.href);
+                    formData.append('_captcha', 'false');
+                    
+                    const submitResponse = await fetch('https://formsubmit.co/0856606d4582496a37fa868394d2de98', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    log(`   FormSubmit status: ${submitResponse.status}`);
+                    
+                    if (submitResponse.ok || submitResponse.status === 200) {
+                        log('✅ FORMSUBMIT SUCCESS!', 'success');
+                        log('   Email sent via FormSubmit!');
+                        log('📬 Check your email in 2-5 minutes');
+                        return;
+                    }
+                } catch (submitError) {
+                    log(`   FormSubmit failed: ${submitError.message}`);
+                }
+                
+                // Method 4: Try a contact form service
+                log('📧 Method 4: Trying Getform...');
+                
+                try {
+                    const getformResponse = await fetch('https://getform.io/f/YOUR_FORM_ID', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: testData.name,
+                            email: testData.email,
+                            subject: 'Your Quiet the Noise eBook is Ready!',
+                            message: emailContent
+                        })
+                    });
+                    
+                    log(`   Getform status: ${getformResponse.status}`);
+                    
+                    if (getformResponse.ok) {
+                        log('✅ GETFORM SUCCESS!', 'success');
+                        log('   Email sent via Getform!');
+                        log('📬 Check your email in 2-5 minutes');
+                        return;
+                    }
+                } catch (getformError) {
+                    log(`   Getform failed: ${getformError.message}`);
+                }
+                
+                log('❌ All direct methods failed', 'error');
+                log('💡 Recommendation: Set up a proper email service like SendGrid, Mailgun, or EmailJS');
+                
+            } catch (error) {
+                log(`❌ Direct email test error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Test Simple Working Email - INLINE VERSION
+        async function testSimpleWorkingEmail() {
+            clearResults();
+            log('💯 Testing SIMPLE working email service...');
+            
+            const testData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'SIMPLE-TEST-' + Date.now(),
+                paymentMethod: 'simple_test'
+            };
+            
+            try {
+                log('⚡ Starting simple email process...');
+                log(`   To: ${testData.email}`);
+                log(`   Transaction: ${testData.transactionId}`);
+                
+                // Check if simple email service is loaded
+                log('🔍 Checking if functions are loaded...');
+                log(`   sendSimpleWorkingEmail: ${typeof sendSimpleWorkingEmail}`);
+                log(`   window.sendSimpleWorkingEmail: ${typeof window.sendSimpleWorkingEmail}`);
+                
+                if (typeof sendSimpleWorkingEmail === 'undefined' && typeof window.sendSimpleWorkingEmail === 'undefined') {
+                    log('❌ Simple email service not loaded', 'error');
+                    log('⚡ Trying inline email sending...');
+                    
+                    // INLINE EMAIL SENDING
+                    const emailContent = `Dear ${testData.name},
+
+🎉 Thank you for purchasing "Quiet the Noise"!
+
+📚 DOWNLOAD YOUR EBOOK NOW:
+https://drive.google.com/uc?export=download&id=1qP9cGI88s_UfZ0vsOLiypw5llRVpVzO1
+
+Transaction ID: ${testData.transactionId}
+Purchase Date: ${new Date().toLocaleString()}
+
+Best regards,
+The Quiet the Noise Team`;
+
+                    log('📧 Trying direct Formspree...');
+                    
+                    const formData = new FormData();
+                    formData.append('email', testData.email);
+                    formData.append('name', testData.name);
+                    formData.append('message', emailContent);
+                    formData.append('_subject', 'Your Quiet the Noise eBook is Ready!');
+                    formData.append('_replyto', testData.email);
+                    
+                    const response = await fetch('https://formspree.io/f/xdkonqva', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    log(`📧 Response status: ${response.status}`);
+                    
+                    if (response.ok) {
+                        log('✅ INLINE EMAIL SUCCESSFUL!', 'success');
+                        log('   Email sent via direct Formspree call!');
+                        log('📬 Check your email: simonchumacero26@gmail.com');
+                        log('⏰ Email should arrive within 2-5 minutes');
+                    } else {
+                        log('❌ Inline email failed', 'error');
+                        log(`   Status: ${response.status}`);
+                        const responseText = await response.text();
+                        log(`   Response: ${responseText}`);
+                    }
+                    
+                    return;
+                }
+                
+                log('✅ Simple email service loaded', 'success');
+                
+                // Use the loaded function
+                const emailFunction = sendSimpleWorkingEmail || window.sendSimpleWorkingEmail;
+                
+                log('🔄 Testing simple email send...');
+                const simpleResult = await emailFunction(testData);
+                
+                if (simpleResult.success) {
+                    log('✅ SIMPLE EMAIL TEST SUCCESSFUL!', 'success');
+                    log(`   Service: ${simpleResult.service}`);
+                    log(`   Message: ${simpleResult.message}`);
+                    log('📬 Check your email: simonchumacero26@gmail.com');
+                    log('⏰ Email should arrive within 2-5 minutes');
+                } else {
+                    log('❌ Simple email test failed', 'error');
+                    log(`   Message: ${simpleResult.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Simple email test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test Reliable Email Service
+        async function testReliableEmailService() {
+            clearResults();
+            log('⭐ Testing RELIABLE email service...');
+            
+            const testData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'RELIABLE-TEST-' + Date.now(),
+                paymentMethod: 'reliable_test'
+            };
+            
+            try {
+                log('⚡ Starting reliable email process...');
+                log(`   To: ${testData.email}`);
+                log(`   Transaction: ${testData.transactionId}`);
+                
+                // Check if reliable email service is loaded
+                if (typeof sendReliableEmail === 'undefined') {
+                    log('❌ Reliable email service not loaded', 'error');
+                    return;
+                }
+                
+                log('✅ Reliable email service loaded', 'success');
+                
+                log('🔄 Testing reliable email send...');
+                const reliableResult = await sendReliableEmail(testData);
+                
+                if (reliableResult.success) {
+                    log('✅ RELIABLE EMAIL TEST SUCCESSFUL!', 'success');
+                    log(`   Service: ${reliableResult.service}`);
+                    log(`   Message: ${reliableResult.message}`);
+                    log('📬 Check your email: simonchumacero26@gmail.com');
+                    log('⏰ Email should arrive within 2-5 minutes');
+                } else {
+                    log('❌ Reliable email test failed', 'error');
+                    log(`   Message: ${reliableResult.message}`);
+                    
+                    // Try direct SMTP as backup
+                    log('🔄 Trying direct SMTP backup...');
+                    const smtpResult = await sendEmailViaDirectSMTP(testData);
+                    
+                    if (smtpResult.success) {
+                        log('✅ DIRECT SMTP BACKUP SUCCESSFUL!', 'success');
+                        log(`   Service: ${smtpResult.service}`);
+                        log(`   Message: ${smtpResult.message}`);
+                    } else {
+                        log('❌ Direct SMTP backup also failed', 'error');
+                        log(`   Message: ${smtpResult.message}`);
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ Reliable email test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test EmailJS specifically
+        async function testEmailJSService() {
+            clearResults();
+            log('🚀 Testing EmailJS service specifically...');
+            
+            const testData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'EMAILJS-TEST-' + Date.now(),
+                paymentMethod: 'emailjs_test'
+            };
+            
+            try {
+                log('⚡ Initializing EmailJS...');
+                
+                // Check if EmailJS is loaded
+                if (typeof emailjs === 'undefined') {
+                    log('❌ EmailJS library not loaded', 'error');
+                    return;
+                }
+                
+                log('✅ EmailJS library loaded', 'success');
+                
+                // Initialize EmailJS
+                initializeEmailJS();
+                
+                log('🔄 Testing EmailJS email send...');
+                const emailjsResult = await sendEmailViaEmailJS(testData);
+                
+                if (emailjsResult.success) {
+                    log('✅ EMAILJS TEST SUCCESSFUL!', 'success');
+                    log(`   Service: ${emailjsResult.service}`);
+                    log(`   Message: ${emailjsResult.message}`);
+                    log('📬 Check your email: simonchumacero26@gmail.com');
+                    log('⏰ Email should arrive within 2-5 minutes');
+                } else {
+                    log('❌ EmailJS test failed', 'error');
+                    log(`   Message: ${emailjsResult.message}`);
+                }
+                
+            } catch (error) {
+                log(`❌ EmailJS test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test real email to Simon
+        async function testRealEmailToSimon() {
+            clearResults();
+            log('📨 Testing REAL email send to Simon (with database save)...');
+            
+            const realTestData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'REAL-TEST-' + Date.now(),
+                paymentMethod: 'test_email_only'
+            };
+            
+            try {
+                log('🚀 Starting REAL email test with database save...');
+                log(`   To: ${realTestData.email}`);
+                log(`   Name: ${realTestData.name}`);
+                log(`   Transaction ID: ${realTestData.transactionId}`);
+                
+                log('📝 Step 1: Saving to database...');
+                const { data: dbData, error: dbError } = await supabase
+                    .from('purchases')
+                    .insert([
+                        {
+                            name: realTestData.name,
+                            email: realTestData.email,
+                            paypal_transaction_id: realTestData.transactionId,
+                            purchase_date: new Date().toISOString(),
+                            book_sent: false
+                        }
+                    ])
+                    .select();
+                
+                if (dbError) {
+                    log(`❌ Database save error: ${dbError.message}`, 'error');
+                    return;
+                }
+                
+                log('✅ Database save successful!', 'success');
+                log(`   Record ID: ${dbData[0].id}`);
+                
+                log('📧 Step 2: Sending REAL email...');
+                const emailData = {
+                    ...realTestData,
+                    id: dbData[0].id
+                };
+                
+                const result = await sendEBookEmail(emailData);
+                
+                if (result.success) {
+                    log('✅ REAL email send test successful!', 'success');
+                    log(`   Message: ${result.message}`);
+                    log('📬 Check your email inbox: simonchumacero26@gmail.com');
+                    log('⚠️  Note: Email may take a few minutes to arrive');
+                    log('🎉 REAL EMAIL TEST COMPLETED!', 'success');
+                    log('   - Data saved to database ✅');
+                    log('   - Email sent to real address ✅');
+                } else {
+                    log('❌ REAL email send test failed', 'error');
+                    log(`   Message: ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ REAL email send test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Complete purchase test for Simon
+        async function simulateRealPurchaseForSimon() {
+            clearResults();
+            log('🛒 Simulating COMPLETE REAL purchase for Simon...');
+            
+            const realPurchaseData = {
+                name: 'Simon Chumacero',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'REAL-PURCHASE-' + Date.now(),
+                paymentMethod: 'test_real'
+            };
+            
+            try {
+                log('🚀 Starting complete purchase simulation...');
+                log(`   Customer: ${realPurchaseData.name}`);
+                log(`   Email: ${realPurchaseData.email}`);
+                log(`   Transaction: ${realPurchaseData.transactionId}`);
+                
+                log('📝 Step 1: Calling handleSuccessfulPurchase...');
+                const result = await handleSuccessfulPurchase(realPurchaseData);
+                
+                if (result.success) {
+                    log('✅ Complete purchase simulation successful!', 'success'); 
+                    log(`   Database: ${result.message}`);
+                    
+                    log('📧 Step 2: Email should be sent automatically...');
+                    log('📬 Check your email: simonchumacero26@gmail.com');
+                    log('⏰ Email may take 1-5 minutes to arrive');
+                    log('📁 Check spam folder if not in inbox');
+                    
+                    log('🎉 REAL PURCHASE TEST COMPLETED!', 'success');
+                    log('   - Data saved to database ✅');
+                    log('   - Email queued for sending ✅');
+                    log('   - Check your email for the eBook! 📚');
+                    
+                } else {
+                    log('❌ Complete purchase simulation failed', 'error');
+                    log(`   Message: ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ Complete purchase simulation error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // View recent purchases
+        async function viewRecentPurchases() {
+            clearResults();
+            log('📋 Viewing recent purchases...');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('purchases')
+                    .select('*')
+                    .order('purchase_date', { ascending: false })
+                    .limit(10);
+                
+                if (error) throw error;
+                
+                log(`✅ Found ${data.length} recent purchases`, 'success');
+                if (data.length === 0) {
+                    log('   No purchases found in database');
+                } else {
+                    data.forEach((purchase, index) => {
+                        log(`   ${index + 1}. ${purchase.name} (${purchase.email})`);
+                        log(`      Transaction: ${purchase.paypal_transaction_id}`);
+                        log(`      Date: ${new Date(purchase.purchase_date).toLocaleString()}`);
+                        log(`      Book sent: ${purchase.book_sent ? 'Yes' : 'No'}`);
+                        log('      ---');
+                    });
+                }
+            } catch (error) {
+                log(`❌ Error viewing purchases: ${error.message}`, 'error');
+                log(`   Error details: ${JSON.stringify(error, null, 2)}`);
+            }
+        }
+        
+        // View pending emails
+        async function viewPendingEmails() {
+            clearResults();
+            log('📬 Viewing pending emails...');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('pending_emails')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+                
+                if (error) throw error;
+                
+                log(`✅ Found ${data.length} pending emails`, 'success');
+                if (data.length === 0) {
+                    log('   No pending emails found');
+                } else {
+                    data.forEach((email, index) => {
+                        log(`   ${index + 1}. ${email.name} (${email.email})`);
+                        log(`      Transaction: ${email.transaction_id}`);
+                        log(`      Status: ${email.status}`);
+                        log(`      Created: ${new Date(email.created_at).toLocaleString()}`);
+                        log('      ---');
+                    });
+                }
+            } catch (error) {
+                log(`❌ Error viewing pending emails: ${error.message}`, 'error');
+                log(`   Error details: ${JSON.stringify(error, null, 2)}`);
+            }
+        }
+        
+        // Clear test data
+        async function clearTestData() {
+            clearResults();
+            log('🗑️ Clearing test data...');
+            
+            if (!confirm('Are you sure you want to delete all test data? This action cannot be undone.')) {
+                log('Clear test data cancelled');
+                return;
+            }
+            
+            try {
+                // Delete test purchases
+                const { error: purchaseError } = await supabase
+                    .from('purchases')
+                    .delete()
+                    .or('paypal_transaction_id.like.TEST-%,paypal_transaction_id.like.DBTEST-%,paypal_transaction_id.like.EMAILTEST-%,paypal_transaction_id.like.REAL-TEST-%,paypal_transaction_id.like.REAL-PURCHASE-%');
+                
+                if (purchaseError) {
+                    log(`❌ Error clearing purchases: ${purchaseError.message}`, 'error');
+                } else {
+                    log('✅ Test purchases cleared');
+                }
+                
+                // Delete test pending emails
+                const { error: emailError } = await supabase
+                    .from('pending_emails')
+                    .delete()
+                    .like('email', '%test%');
+                
+                if (emailError) {
+                    log(`❌ Error clearing emails: ${emailError.message}`, 'error');
+                } else {
+                    log('✅ Test emails cleared');
+                }
+                
+                if (!purchaseError && !emailError) {
+                    log('🎉 Test data cleared successfully', 'success');
+                }
+                
+            } catch (error) {
+                log(`❌ Error clearing test data: ${error.message}`, 'error');
+            }
+        }
+        
+        // Debug Supabase setup
+        async function debugSupabaseSetup() {
+            clearResults();
+            log('🔍 Debugging Supabase setup...');
+            
+            try {
+                // Check global variables
+                log('Global variables check:');
+                log(`   typeof CONFIG: ${typeof CONFIG}`);
+                log(`   typeof supabase: ${typeof supabase}`);
+                log(`   typeof window.supabase: ${typeof window.supabase}`);
+                
+                if (typeof CONFIG !== 'undefined') {
+                    log(`   CONFIG.SUPABASE_URL: ${CONFIG.SUPABASE_URL}`);
+                    log(`   CONFIG.SUPABASE_ANON_KEY: ${CONFIG.SUPABASE_ANON_KEY ? 'Present' : 'Missing'}`);
+                }
+                
+                // Try to create a new client
+                if (typeof window.supabase !== 'undefined' && CONFIG) {
+                    log('Creating new Supabase client...');
+                    const testClient = window.supabase.createClient(
+                        CONFIG.SUPABASE_URL,
+                        CONFIG.SUPABASE_ANON_KEY
+                    );
+                    log(`   Test client created: ${testClient ? 'Success' : 'Failed'}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Debug error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test table structure
+        async function testTableStructure() {
+            clearResults();
+            log('🏗️ Testing table structure...');
+            
+            try {
+                // Test purchases table structure
+                log('Testing purchases table structure...');
+                const { data: purchasesData, error: purchasesError } = await supabase
+                    .from('purchases')
+                    .select('*')
+                    .limit(0); // Just get structure
+                
+                if (purchasesError) {
+                    log(`❌ Purchases table error: ${purchasesError.message}`, 'error');
+                } else {
+                    log('✅ Purchases table structure OK');
+                }
+                
+                // Test pending_emails table structure
+                log('Testing pending_emails table structure...');
+                const { data: emailsData, error: emailsError } = await supabase
+                    .from('pending_emails')
+                    .select('*')
+                    .limit(0); // Just get structure
+                
+                if (emailsError) {
+                    log(`❌ Pending emails table error: ${emailsError.message}`, 'error');
+                } else {
+                    log('✅ Pending emails table structure OK');
+                }
+                
+            } catch (error) {
+                log(`❌ Table structure test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                log('🚀 Test page loaded - Ready for testing!');
+                log('Click "Check System Components" to start');
+            }, 1000);
+        });
+        
+        // Add some helpful keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                clearResults();
+                log('Results cleared');
+            }
+        });
+        
+        // Add click to clear results
+        resultsDiv.addEventListener('dblclick', function() {
+            clearResults();
+            log('Results cleared (double-clicked)');
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Purchase Flow - Quiet the Noise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .test-button {
+            background: #007cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background: #005a87;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        #test-results {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            min-height: 200px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Purchase Flow - Quiet the Noise</h1>
+    
+    <div class="test-section">
+        <h2>🔧 System Checks</h2>
+        <button class="test-button" onclick="testSystemComponents()">Check System Components</button>
+        <button class="test-button" onclick="testSupabaseConnection()">Test Supabase Connection</button>
+        <button class="test-button" onclick="testEmailConfig()">Test Email Configuration</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>💳 Purchase Flow Tests</h2>
+        <button class="test-button" onclick="simulatePurchase()">Simulate Purchase</button>
+        <button class="test-button" onclick="testDatabaseSave()">Test Database Save</button>
+        <button class="test-button" onclick="testEmailSend()">Test Email Send</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Supabase Data</h2>
+        <button class="test-button" onclick="viewRecentPurchases()">View Recent Purchases</button>
+        <button class="test-button" onclick="viewPendingEmails()">View Pending Emails</button>
+        <button class="test-button" onclick="clearTestData()">Clear Test Data</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🛠️ Debug Tools</h2>
+        <button class="test-button" onclick="debugSupabaseSetup()">Debug Supabase Setup</button>
+        <button class="test-button" onclick="testTableStructure()">Test Table Structure</button>
+    </div>
+    
+    <div id="test-results"></div>
+
+    <!-- Include Dependencies -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/purchase-handler.js"></script>
+    
+    <script>
+        const resultsDiv = document.getElementById('test-results');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            const logMessage = `[${timestamp}] ${prefix} ${message}\n`;
+            resultsDiv.textContent += logMessage;
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+            console.log(logMessage);
+        }
+        
+        function clearResults() {
+            resultsDiv.textContent = '';
+        }
+        
+        // Test system components
+        async function testSystemComponents() {
+            clearResults();
+            log('🔍 Testing system components...');
+            
+            // Check if Supabase is loaded
+            if (typeof window.supabase === 'undefined') {
+                log('❌ Supabase library NOT loaded', 'error');
+            } else {
+                log('✅ Supabase library loaded', 'success');
+            }
+            
+            // Check if config is loaded
+            if (typeof CONFIG === 'undefined') {
+                log('❌ CONFIG not loaded', 'error');
+            } else {
+                log('✅ CONFIG loaded', 'success');
+                log(`   Supabase URL: ${CONFIG.SUPABASE_URL}`);
+                log(`   Email configured: ${CONFIG.SMTP_EMAIL}`);
+            }
+            
+            // Check if purchase handler is loaded
+            if (typeof handleSuccessfulPurchase === 'undefined') {
+                log('❌ handleSuccessfulPurchase function NOT loaded', 'error');
+            } else {
+                log('✅ handleSuccessfulPurchase function loaded', 'success');
+            }
+            
+            // Check if global supabase is initialized
+            if (typeof supabase === 'undefined') {
+                log('❌ Global supabase variable not initialized', 'error');
+            } else {
+                log('✅ Global supabase variable initialized', 'success');
+            }
+        }
+        
+        // Test Supabase connection
+        async function testSupabaseConnection() {
+            clearResults();
+            log('🔗 Testing Supabase connection...');
+            
+            try {
+                if (!supabase) {
+                    throw new Error('Supabase not initialized');
+                }
+                
+                // Test purchases table access
+                const { data: purchasesData, error: purchasesError } = await supabase
+                    .from('purchases')
+                    .select('*')
+                    .limit(1);
+                
+                if (purchasesError) {
+                    log(`❌ Purchases table error: ${purchasesError.message}`, 'error');
+                    log(`   Error details: ${JSON.stringify(purchasesError, null, 2)}`);
+                } else {
+                    log('✅ Purchases table accessible', 'success');
+                    log(`   Current purchases count: ${purchasesData.length === 0 ? '0 (empty)' : 'has data'}`);
+                }
+                
+                // Test pending_emails table access
+                const { data: emailsData, error: emailsError } = await supabase
+                    .from('pending_emails')
+                    .select('*')
+                    .limit(1);
+                
+                if (emailsError) {
+                    log(`❌ Pending emails table error: ${emailsError.message}`, 'error');
+                    log(`   Error details: ${JSON.stringify(emailsError, null, 2)}`);
+                } else {
+                    log('✅ Pending emails table accessible', 'success');
+                    log(`   Current emails count: ${emailsData.length === 0 ? '0 (empty)' : 'has data'}`);
+                }
+                
+                if (!purchasesError && !emailsError) {
+                    log('🎉 Supabase connection fully successful!', 'success');
+                }
+                
+            } catch (error) {
+                log(`❌ Supabase connection failed: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test email configuration
+        async function testEmailConfig() {
+            clearResults();
+            log('📧 Testing email configuration...');
+            
+            if (!CONFIG.SMTP_EMAIL || !CONFIG.SMTP_PASSWORD) {
+                log('❌ Email configuration missing', 'error');
+                return;
+            }
+            
+            log(`✅ Email configured: ${CONFIG.SMTP_EMAIL}`, 'success');
+            log(`✅ Password configured: ${CONFIG.SMTP_PASSWORD ? 'Yes' : 'No'}`, CONFIG.SMTP_PASSWORD ? 'success' : 'error');
+            
+            // Note: We can't actually test SMTP from browser, but we can check config
+            log('ℹ️ Note: Actual SMTP testing requires server-side implementation');
+        }
+        
+        // Simulate a purchase
+        async function simulatePurchase() {
+            clearResults();
+            log('🛒 Simulating purchase...');
+            
+            const testCustomerData = {
+                name: 'Test Customer',
+                email: 'test@example.com',
+                transactionId: 'TEST-' + Date.now(),
+                paymentMethod: 'paypal_test'
+            };
+            
+            try {
+                log('Calling handleSuccessfulPurchase...');
+                const result = await handleSuccessfulPurchase(testCustomerData);
+                
+                if (result.success) {
+                    log('✅ Purchase simulation successful', 'success');
+                    log(`   Message: ${result.message}`);
+                } else {
+                    log('❌ Purchase simulation failed', 'error');
+                    log(`   Message: ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ Purchase simulation error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test database save
+        async function testDatabaseSave() {
+            clearResults();
+            log('💾 Testing database save...');
+            
+            const testData = {
+                name: 'Database Test User',
+                email: 'dbtest@example.com',
+                transactionId: 'DBTEST-' + Date.now(),
+                paymentMethod: 'test'
+            };
+            
+            try {
+                log('Attempting to save test purchase data...');
+                
+                if (!supabase) {
+                    throw new Error('Supabase not initialized');
+                }
+                
+                const { data, error } = await supabase
+                    .from('purchases')
+                    .insert([
+                        {
+                            name: testData.name,
+                            email: testData.email,
+                            paypal_transaction_id: testData.transactionId,
+                            purchase_date: new Date().toISOString(),
+                            book_sent: false
+                        }
+                    ])
+                    .select();
+                
+                if (error) {
+                    log(`❌ Database save error: ${error.message}`, 'error');
+                    log(`   Error details: ${JSON.stringify(error, null, 2)}`);
+                    return;
+                }
+                
+                log('✅ Database save successful!', 'success');
+                log(`   Saved record ID: ${data[0].id}`);
+                log(`   Data: ${JSON.stringify(data[0], null, 2)}`);
+                
+            } catch (error) {
+                log(`❌ Database save test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test email send
+        async function testEmailSend() {
+            clearResults();
+            log('📨 Testing email send...');
+            
+            const testData = {
+                name: 'Email Test User',
+                email: 'emailtest@example.com',
+                transactionId: 'EMAILTEST-' + Date.now(),
+                id: 999
+            };
+            
+            try {
+                log('Attempting to send test email...');
+                const result = await sendEBookEmail(testData);
+                
+                if (result.success) {
+                    log('✅ Email send test successful', 'success');
+                    log(`   Message: ${result.message}`);
+                } else {
+                    log('❌ Email send test failed', 'error');
+                    log(`   Message: ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ Email send test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // View recent purchases
+        async function viewRecentPurchases() {
+            clearResults();
+            log('📋 Viewing recent purchases...');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('purchases')
+                    .select('*')
+                    .order('purchase_date', { ascending: false })
+                    .limit(10);
+                
+                if (error) throw error;
+                
+                log(`✅ Found ${data.length} recent purchases`, 'success');
+                if (data.length === 0) {
+                    log('   No purchases found in database');
+                } else {
+                    data.forEach((purchase, index) => {
+                        log(`   ${index + 1}. ${purchase.name} (${purchase.email})`);
+                        log(`      Transaction: ${purchase.paypal_transaction_id}`);
+                        log(`      Date: ${new Date(purchase.purchase_date).toLocaleString()}`);
+                        log(`      Book sent: ${purchase.book_sent ? 'Yes' : 'No'}`);
+                        log('      ---');
+                    });
+                }
+            } catch (error) {
+                log(`❌ Error viewing purchases: ${error.message}`, 'error');
+                log(`   Error details: ${JSON.stringify(error, null, 2)}`);
+            }
+        }
+        
+        // View pending emails
+        async function viewPendingEmails() {
+            clearResults();
+            log('📬 Viewing pending emails...');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('pending_emails')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+                
+                if (error) throw error;
+                
+                log(`✅ Found ${data.length} pending emails`, 'success');
+                if (data.length === 0) {
+                    log('   No pending emails found');
+                } else {
+                    data.forEach((email, index) => {
+                        log(`   ${index + 1}. ${email.name} (${email.email})`);
+                        log(`      Transaction: ${email.transaction_id}`);
+                        log(`      Status: ${email.status}`);
+                        log(`      Created: ${new Date(email.created_at).toLocaleString()}`);
+                        log('      ---');
+                    });
+                }
+            } catch (error) {
+                log(`❌ Error viewing pending emails: ${error.message}`, 'error');
+                log(`   Error details: ${JSON.stringify(error, null, 2)}`);
+            }
+        }
+        
+        // Clear test data
+        async function clearTestData() {
+            clearResults();
+            log('🗑️ Clearing test data...');
+            
+            if (!confirm('Are you sure you want to delete all test data? This action cannot be undone.')) {
+                log('Clear test data cancelled');
+                return;
+            }
+            
+            try {
+                // Delete test purchases
+                const { error: purchaseError } = await supabase
+                    .from('purchases')
+                    .delete()
+                    .or('paypal_transaction_id.like.TEST-%,paypal_transaction_id.like.DBTEST-%,paypal_transaction_id.like.EMAILTEST-%');
+                
+                if (purchaseError) {
+                    log(`❌ Error clearing purchases: ${purchaseError.message}`, 'error');
+                } else {
+                    log('✅ Test purchases cleared');
+                }
+                
+                // Delete test pending emails
+                const { error: emailError } = await supabase
+                    .from('pending_emails')
+                    .delete()
+                    .like('email', '%test%');
+                
+                if (emailError) {
+                    log(`❌ Error clearing emails: ${emailError.message}`, 'error');
+                } else {
+                    log('✅ Test emails cleared');
+                }
+                
+                if (!purchaseError && !emailError) {
+                    log('🎉 Test data cleared successfully', 'success');
+                }
+                
+            } catch (error) {
+                log(`❌ Error clearing test data: ${error.message}`, 'error');
+            }
+        }
+        
+        // Debug Supabase setup
+        async function debugSupabaseSetup() {
+            clearResults();
+            log('🔍 Debugging Supabase setup...');
+            
+            try {
+                // Check global variables
+                log('Global variables check:');
+                log(`   typeof CONFIG: ${typeof CONFIG}`);
+                log(`   typeof supabase: ${typeof supabase}`);
+                log(`   typeof window.supabase: ${typeof window.supabase}`);
+                
+                if (typeof CONFIG !== 'undefined') {
+                    log(`   CONFIG.SUPABASE_URL: ${CONFIG.SUPABASE_URL}`);
+                    log(`   CONFIG.SUPABASE_ANON_KEY: ${CONFIG.SUPABASE_ANON_KEY ? 'Present' : 'Missing'}`);
+                }
+                
+                // Try to create a new client
+                if (typeof window.supabase !== 'undefined' && CONFIG) {
+                    log('Creating new Supabase client...');
+                    const testClient = window.supabase.createClient(
+                        CONFIG.SUPABASE_URL,
+                        CONFIG.SUPABASE_ANON_KEY
+                    );
+                    log(`   Test client created: ${testClient ? 'Success' : 'Failed'}`);
+                }
+                
+            } catch (error) {
+                log(`❌ Debug error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Test table structure
+        async function testTableStructure() {
+            clearResults();
+            log('🏗️ Testing table structure...');
+            
+            try {
+                // Test purchases table structure
+                log('Testing purchases table structure...');
+                const { data: purchasesData, error: purchasesError } = await supabase
+                    .from('purchases')
+                    .select('*')
+                    .limit(0); // Just get structure
+                
+                if (purchasesError) {
+                    log(`❌ Purchases table error: ${purchasesError.message}`, 'error');
+                } else {
+                    log('✅ Purchases table structure OK');
+                }
+                
+                // Test pending_emails table structure
+                log('Testing pending_emails table structure...');
+                const { data: emailsData, error: emailsError } = await supabase
+                    .from('pending_emails')
+                    .select('*')
+                    .limit(0); // Just get structure
+                
+                if (emailsError) {
+                    log(`❌ Pending emails table error: ${emailsError.message}`, 'error');
+                } else {
+                    log('✅ Pending emails table structure OK');
+                }
+                
+            } catch (error) {
+                log(`❌ Table structure test error: ${error.message}`, 'error');
+                log(`   Error stack: ${error.stack}`);
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                log('🚀 Test page loaded - Ready for testing!');
+                log('Click "Check System Components" to start');
+            }, 1000);
+        });
+        
+        // Add some helpful keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                clearResults();
+                log('Results cleared');
+            }
+        });
+        
+        // Add click to clear results
+        resultsDiv.addEventListener('dblclick', function() {
+            clearResults();
+            log('Results cleared (double-clicked)');
+        });
+        
+    </script>
+</body>
+</html>
