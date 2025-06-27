@@ -7,7 +7,7 @@ ORDER BY ordinal_position;
 
 -- Si la tabla no tiene la columna amount, añadirla
 ALTER TABLE purchases 
-ADD COLUMN IF NOT EXISTS amount VARCHAR(10) DEFAULT '7.99';
+ADD COLUMN IF NOT EXISTS amount VARCHAR(10) DEFAULT '1';
 
 -- Si la tabla no tiene la columna payment_method, añadirla
 ALTER TABLE purchases 

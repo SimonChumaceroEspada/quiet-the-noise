@@ -137,7 +137,7 @@ function forceRenderPayPalButtons() {
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: '7.99',
+                        value: '1',
                         currency_code: 'USD'
                     },
                     description: 'Quiet the Noise: 30 Days to Mental Clarity eBook'

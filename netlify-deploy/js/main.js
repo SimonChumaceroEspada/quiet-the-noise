@@ -257,7 +257,7 @@ function initializePayPalTracking() {
             if (e.target.closest('#paypal-container-T62JMDAV6VUBQ')) {
                 trackEvent('paypal_payment_attempt', {
                     product: 'quiet_the_noise_ebook',
-                    price: 7.99,
+                    price: 1,
                     payment_method: 'paypal'
                 });
             }
@@ -276,7 +276,7 @@ async function handlePurchase(paymentMethod = 'stripe') {
         // Track purchase attempt with payment method        
         trackEvent('purchase_attempt', {
             product: 'quiet_the_noise_ebook',
-            price: 7.99,
+            price: 1,
             payment_method: paymentMethod
         });
         

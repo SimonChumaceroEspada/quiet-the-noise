@@ -29,7 +29,7 @@ const CONFIG = {
     REFUNDS_EMAIL: 'refunds@quietthenoise.com',
     BUSINESS_NAME: 'Quiet the Noise',
       // Product Details
-    BOOK_PRICE: 7.99,
+    BOOK_PRICE: 1,
     BOOK_CURRENCY: 'USD',
     
     // SEO
