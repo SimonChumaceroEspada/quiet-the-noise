@@ -298,20 +298,18 @@ p {
     gap: 1rem;
     margin-top: 1rem;
     padding-top: 1rem;
-    flex-direction: row;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .social-text {
     font-size: 0.85rem;
     color: var(--text-secondary);
     font-weight: 500;
-    text-align: center;
 }
 
 .hero-social-links {
     display: flex;
     gap: 0.75rem;
-    justify-content: center;
 }
 
 .hero-social-link {
@@ -951,7 +949,7 @@ p {
 
 .footer-content {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 3rem;
     margin-bottom: 2rem;
 }
@@ -1000,6 +998,59 @@ p {
     color: rgba(255, 255, 255, 0.5);
     margin: 0;
     font-size: 0.9rem;
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.social-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.social-link svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Specific social media colors on hover */
+.social-link:nth-child(1):hover {
+    background: #1877f2;
+    color: white;
+}
+
+.social-link:nth-child(2):hover {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+}
+
+.social-link:nth-child(3):hover {
+    background: #ff0000;
+    color: white;
+}
+
+.social-link:nth-child(4):hover {
+    background: #000000;
+    color: white;
 }
 
 /* Legal Pages Styles */
@@ -1480,19 +1531,12 @@ p {
         gap: 1rem;
     }
     
-    .hero-social {
-        flex-direction: column;
-        gap: 0.75rem;
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
+    .benefit-item {
+        font-size: 0.8rem;
+        padding: 6px 12px;
     }
-    
-    .social-text {
-        text-align: center;
-    }
-    
-    .hero-social-links {
-        justify-content: center;
+      .book-showcase {
+        max-width: 250px;
     }
     
     .floating-elements {
@@ -1655,6 +1699,39 @@ p {
     .footer-section {
         margin-bottom: 1rem;
     }
+    
+    .social-links {
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    
+    .social-link {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .social-link svg {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* Tablet Footer Layout */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    
+    .footer-main {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
 }
 
 /* Additional zoom optimizations */
@@ -1725,6 +1802,10 @@ p {
     .benefit-item {
         font-size: 0.75rem;
         padding: 4px 8px;
+    }
+    
+    .benefit-icon {
+        font-size: 1rem;
     }
     
     .book-showcase {
@@ -2101,5 +2182,161 @@ body {
     }
     100% {
         transform: scale(1);
+    }
+}
+
+/* Responsive styles for hero social links */
+@media (max-width: 768px) {
+    .hero-social {
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+    }
+    
+    .social-text {
+        text-align: center;
+    }
+    
+    .hero-social-links {
+        justify-content: center;
+    }
+}
+
+/* WhatsApp Floating Button */
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-button {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.whatsapp-button:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.whatsapp-button svg {
+    width: 28px;
+    height: 28px;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-text {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #25d366;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.whatsapp-text::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid #25d366;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+}
+
+.whatsapp-float:hover .whatsapp-text {
+    opacity: 1;
+    visibility: visible;
+    right: 75px;
+}
+
+/* Pulse animation */
+.whatsapp-float::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #25d366;
+    animation: whatsappPulse 2s infinite;
+    z-index: -1;
+}
+
+@keyframes whatsappPulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        width: 55px;
+        height: 55px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .whatsapp-button svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .whatsapp-text {
+        font-size: 12px;
+        padding: 6px 12px;
+        right: 65px;
+    }
+    
+    .whatsapp-float:hover .whatsapp-text {
+        right: 70px;
     }
 }
