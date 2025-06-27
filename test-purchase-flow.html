@@ -56,6 +56,11 @@
     
     <div class="test-section">
         <h2>🔧 System Checks</h2>
+        <button class="test-button" onclick="fixSupabaseTable()">🔧 Fix Supabase Table Structure</button>
+        <button class="test-button" onclick="runFullDebug()">🔍 Full System Debug</button>
+        <button class="test-button" onclick="debugSupabaseConnection()">🔗 Debug Supabase Connection</button>
+        <button class="test-button" onclick="debugListPurchases()">📋 List All Purchases</button>
+        <button class="test-button" onclick="debugSavePurchase()">💾 Test Save Purchase</button>
         <button class="test-button" onclick="testSystemComponents()">Check System Components</button>
         <button class="test-button" onclick="testSupabaseConnection()">Test Supabase Connection</button>
         <button class="test-button" onclick="testEmailConfig()">Test Email Configuration</button>
@@ -81,10 +86,32 @@
     </div>
     
     <div class="test-section">
-        <h2>💳 Purchase Flow Tests</h2>
+        <h2>� PRODUCTION VALIDATION</h2>
+        <button class="test-button" onclick="runProductionValidation()">🎯 RUN PRODUCTION VALIDATION</button>
+        <button class="test-button" onclick="console.log('Validation Results:', window.validationResults)">📊 Show Validation Results</button>
+        <p style="color: #666; font-size: 14px;">
+            Validates PayPal, Supabase, and Email configurations for production readiness
+        </p>
+    </div>
+
+    <div class="test-section">
+        <h2>�💳 Purchase Flow Tests</h2>
+        <button class="test-button" onclick="debugPayPalIntegration()">🔍 Debug PayPal Integration</button>
+        <button class="test-button" onclick="simulatePayPalSuccess()">🧪 Simulate PayPal Success</button>
+        <button class="test-button" onclick="renderTestPayPalButton()">🔄 Re-render PayPal Button</button>
+        <button class="test-button" onclick="forceRenderPayPalButtons()">🔄 Force Render PayPal Buttons</button>
         <button class="test-button" onclick="simulatePurchase()">Simulate Purchase</button>
         <button class="test-button" onclick="testDatabaseSave()">Test Database Save</button>
         <button class="test-button" onclick="testEmailSend()">Test Email Send</button>
+        <button class="test-button" onclick="runSimpleEmailTest()">🧪 Simple Email Test</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>📧 Email Validation</h2>
+        <button class="test-button" onclick="testFormSubmitIframe()">Test FormSubmit (Iframe)</button>
+        <button class="test-button" onclick="testFormSubmitDirect()">Test FormSubmit (Direct)</button>
+        <button class="test-button" onclick="testWeb3Forms()">Test Web3Forms</button>
+        <button class="test-button" onclick="testProductionEmailFixed()">Test Production Email (Fixed)</button>
     </div>
     
     <div class="test-section">
@@ -102,11 +129,26 @@
     
     <div id="test-results"></div>
 
+    <!-- PayPal for testing -->
+    <div class="test-section">
+        <h2>💳 PayPal Test Container</h2>
+        <div id="paypal-container-DG2V4FLX49RM8" style="max-width: 300px; margin: 20px auto;"></div>
+        <p style="text-align: center; color: #666; font-size: 0.9rem;">
+            ↑ This PayPal button should appear above for testing
+        </p>
+    </div>
+
     <!-- Include Dependencies -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://sandbox.paypal.com/sdk/js?client-id=BAA5S-sLSal-HGmyd7_fI4wRAfYwQtxYQ7EjiCn7P5J82yNbnmfJCK_oLN5P8SjenRDH4jHwMcBlXopDRg&components=hosted-buttons,buttons&enable-funding=venmo&currency=USD"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="https://smtpjs.com/v3/smtp.js"></script>
     <script src="./js/config.js"></script>
+    <script src="./js/debug-supabase.js"></script>
+    <script src="./js/debug-paypal.js"></script>
+    <script src="./js/production-validation.js"></script>
+    <script src="./js/fix-supabase-table.js"></script>
+    <script src="./js/backup-email-service.js"></script>
     <script src="./js/production-email.js"></script>
     <script src="./js/simple-working-email.js"></script>
     <script src="./js/reliable-email.js"></script>
@@ -114,6 +156,142 @@
     <script src="./js/purchase-handler.js"></script>
     <script src="./js/simple-auto-email.js"></script>
     <script src="./js/email-alternative.js"></script>
+    <script src="js/simple-email-test.js"></script>
+    
+    <script>
+        // PayPal Integration for Test Page
+        
+        // PayPal success callback - handles completed payments
+        window.onPayPalSuccess = function(details, data) {
+            console.log('🎉 PayPal SUCCESS callback triggered!');
+            console.log('PayPal Details:', details);
+            console.log('PayPal Data:', data);
+            
+            // Extract customer information from PayPal response
+            const customerData = {
+                name: details.payer?.name ? 
+                      `${details.payer.name.given_name || ''} ${details.payer.name.surname || ''}`.trim() :
+                      'PayPal Customer',
+                email: details.payer?.email_address || 'no-email@paypal.com',
+                transactionId: details.id || data.orderID || 'no-transaction-id',
+                paymentMethod: 'paypal'
+            };
+            
+            console.log('Customer Data Extracted:', customerData);
+            processPayPalPurchase(customerData);
+            return true;
+        };
+        
+        // PayPal error callback
+        window.onPayPalError = function(err) {
+            console.error('❌ PayPal payment error:', err);
+            log('❌ PayPal payment error: ' + err.message, 'error');
+        };
+        
+        // PayPal cancel callback
+        window.onPayPalCancel = function(data) {
+            console.log('❌ PayPal payment cancelled:', data);
+            log('ℹ️ PayPal payment was cancelled', 'info');
+        };
+
+        // Process PayPal purchase
+        function processPayPalPurchase(customerData) {
+            console.log('🔄 Processing PayPal purchase:', customerData);
+            log('🔄 Processing PayPal purchase: ' + customerData.email, 'info');
+            
+            if (typeof handleSuccessfulPurchase === 'function') {
+                handleSuccessfulPurchase(customerData).then(result => {
+                    console.log('Purchase processing result:', result);
+                    if (result.success) {
+                        log('✅ Purchase successful: ' + result.message, 'success');
+                    } else {
+                        log('❌ Purchase failed: ' + result.message, 'error');
+                    }
+                }).catch(error => {
+                    console.error('Error processing purchase:', error);
+                    log('❌ Error processing purchase: ' + error.message, 'error');
+                });
+            } else {
+                console.error('handleSuccessfulPurchase function not found!');
+                log('❌ handleSuccessfulPurchase function not found!', 'error');
+            }
+        }
+
+        // Render PayPal button for testing
+        function renderTestPayPalButton() {
+            const container = document.getElementById('paypal-container-DG2V4FLX49RM8');
+            if (!container) {
+                console.error('❌ PayPal container not found');
+                return;
+            }
+            
+            if (typeof paypal === 'undefined' || typeof paypal.Buttons !== 'function') {
+                console.error('❌ PayPal Buttons not available');
+                log('❌ PayPal library not loaded', 'error');
+                return;
+            }
+            
+            // Limpiar el contenedor
+            container.innerHTML = '';
+            
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    console.log('🛒 PayPal createOrder called');
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: '7.99',
+                                currency_code: 'USD'
+                            },
+                            description: 'Quiet the Noise: 30 Days to Mental Clarity eBook (TEST)'
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    console.log('✅ PayPal onApprove called with data:', data);
+                    return actions.order.capture().then(function(details) {
+                        console.log('💰 PayPal order captured, details:', details);
+                        
+                        // Llamar al callback personalizado
+                        if (typeof window.onPayPalSuccess === 'function') {
+                            window.onPayPalSuccess(details, data);
+                        } else {
+                            console.error('❌ onPayPalSuccess callback not found!');
+                        }
+                    });
+                },
+                onError: function(err) {
+                    console.error('❌ PayPal onError called:', err);
+                    if (typeof window.onPayPalError === 'function') {
+                        window.onPayPalError(err);
+                    }
+                },
+                onCancel: function(data) {
+                    console.log('❌ PayPal onCancel called:', data);
+                    if (typeof window.onPayPalCancel === 'function') {
+                        window.onPayPalCancel(data);
+                    }
+                }
+            }).render('#paypal-container-DG2V4FLX49RM8').then(function() {
+                console.log('✅ Test PayPal button rendered successfully');
+                log('✅ PayPal button ready for testing', 'success');
+            }).catch(function(err) {
+                console.error('❌ PayPal button render failed:', err);
+                log('❌ PayPal button render failed: ' + err.message, 'error');
+            });
+        }
+
+        // Initialize PayPal when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                console.log('🔄 Initializing PayPal for test page...');
+                renderTestPayPalButton();
+            }, 2000);
+        });
+        
+        // Make renderTestPayPalButton available globally
+        window.renderTestPayPalButton = renderTestPayPalButton;
+    </script>
     
     <script>
         const resultsDiv = document.getElementById('test-results');
@@ -1276,6 +1454,285 @@ The Quiet the Noise Team`;
             log('Results cleared (double-clicked)');
         });
         
+        // Simple email tests using the new service
+        async function runSimpleEmailTest() {
+            clearResults();
+            log('🧪 Running comprehensive email tests...');
+            
+            if (typeof runEmailDeliveryTest === 'undefined') {
+                log('❌ Simple email test service not loaded', 'error');
+                return;
+            }
+            
+            try {
+                const results = await runEmailDeliveryTest();
+                log('📊 Email test results:', 'info');
+                
+                Object.keys(results).forEach(method => {
+                    const result = results[method];
+                    if (result.success) {
+                        log(`✅ ${method}: ${result.message}`, 'success');
+                    } else {
+                        log(`❌ ${method}: ${result.message}`, 'error');
+                    }
+                });
+                
+                log('\n📧 Check your email for test messages!', 'info');
+                
+            } catch (error) {
+                log(`❌ Simple email test error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testFormSubmitIframe() {
+            clearResults();
+            log('📧 Testing FormSubmit via iframe method...');
+            
+            const testData = {
+                name: 'Test Customer',
+                email: 'simonchumacero26@gmail.com', // Change this to your email
+                transactionId: 'IFRAME-TEST-' + Date.now()
+            };
+            
+            if (typeof runFormSubmitIframeTest === 'undefined') {
+                log('❌ Simple email test service not loaded', 'error');
+                return;
+            }
+            
+            try {
+                const result = await runFormSubmitIframeTest(testData);
+                if (result.success) {
+                    log('✅ FormSubmit iframe test successful!', 'success');
+                    log(`   ${result.message}`);
+                    log('📧 Check your email for the test message!', 'info');
+                } else {
+                    log('❌ FormSubmit iframe test failed', 'error');
+                    log(`   ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ FormSubmit iframe test error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testFormSubmitDirect() {
+            clearResults();
+            log('📧 Testing FormSubmit via direct method...');
+            
+            const testData = {
+                name: 'Test Customer',
+                email: 'simonchumacero26@gmail.com', // Change this to your email
+                transactionId: 'DIRECT-TEST-' + Date.now()
+            };
+            
+            if (typeof runFormSubmitDirectTest === 'undefined') {
+                log('❌ Simple email test service not loaded', 'error');
+                return;
+            }
+            
+            try {
+                const result = await runFormSubmitDirectTest(testData);
+                if (result.success) {
+                    log('✅ FormSubmit direct test successful!', 'success');
+                    log(`   ${result.message}`);
+                    log('📧 Check your email for the test message!', 'info');
+                } else {
+                    log('❌ FormSubmit direct test failed', 'error');
+                    log(`   ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ FormSubmit direct test error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testWeb3Forms() {
+            clearResults();
+            log('📧 Testing Web3Forms...');
+            
+            const testData = {
+                name: 'Test Customer',
+                email: 'simonchumacero26@gmail.com', // Change this to your email
+                transactionId: 'WEB3-TEST-' + Date.now()
+            };
+            
+            if (typeof runWeb3FormsTest === 'undefined') {
+                log('❌ Simple email test service not loaded', 'error');
+                return;
+            }
+            
+            try {
+                const result = await runWeb3FormsTest(testData);
+                if (result.success) {
+                    log('✅ Web3Forms test successful!', 'success');
+                    log(`   ${result.message}`);
+                    log('📧 Check your email for the test message!', 'info');
+                } else {
+                    log('❌ Web3Forms test failed', 'error');
+                    log(`   ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ Web3Forms test error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testProductionEmailFixed() {
+            clearResults();
+            log('📧 Testing fixed production email service...');
+            
+            const testData = {
+                name: 'Test Customer',
+                email: 'simonchumacero26@gmail.com', // Change this to your email
+                transactionId: 'PRODUCTION-TEST-' + Date.now()
+            };
+            
+            if (typeof sendProductionEmail === 'undefined') {
+                log('❌ Production email service not loaded', 'error');
+                return;
+            }
+            
+            try {
+                const result = await sendProductionEmail(testData);
+                if (result.success) {
+                    log('✅ Production email test successful!', 'success');
+                    log(`   ${result.message}`);
+                    log(`   Service: ${result.service}`);
+                    log('📧 Check your email for the test message!', 'info');
+                } else {
+                    log('❌ Production email test failed', 'error');
+                    log(`   ${result.message}`);
+                }
+            } catch (error) {
+                log(`❌ Production email test error: ${error.message}`, 'error');
+            }
+        }
+        
+        // FINAL PRODUCTION TESTS
+        async function runCompleteProductionTest() {
+            clearResults();
+            log('🚀 RUNNING COMPLETE PRODUCTION TEST', 'info');
+            log('This simulates a real customer purchase from start to finish...', 'info');
+            log('', 'info');
+            
+            const testCustomer = {
+                name: 'Simon Chumacero (Production Test)',
+                email: 'simonchumacero26@gmail.com',
+                transactionId: 'PROD-COMPLETE-' + Date.now(),
+                paymentMethod: 'paypal_production_test'
+            };
+            
+            try {
+                // Step 1: Test Supabase Connection
+                log('📋 Step 1: Testing database connection...', 'info');
+                if (!supabase) {
+                    log('❌ Supabase not initialized', 'error');
+                    return;
+                }
+                
+                const { error: dbTest } = await supabase
+                    .from('purchases')
+                    .select('id')
+                    .limit(1);
+                
+                if (dbTest) {
+                    log('❌ Database connection failed: ' + dbTest.message, 'error');
+                    return;
+                }
+                log('✅ Database connection: OK', 'success');
+                
+                // Step 2: Save purchase to database
+                log('💾 Step 2: Saving purchase to database...', 'info');
+                const saveResult = await savePurchaseData(testCustomer);
+                
+                if (!saveResult.success) {
+                    log('❌ Database save failed: ' + saveResult.message, 'error');
+                    return;
+                }
+                log('✅ Purchase saved to database: ' + saveResult.message, 'success');
+                
+                // Step 3: Send email to customer
+                log('📧 Step 3: Sending eBook email to customer...', 'info');
+                const emailResult = await sendEBookEmail({
+                    ...testCustomer,
+                    id: saveResult.purchaseId || 999
+                });
+                
+                if (!emailResult.success) {
+                    log('❌ Email delivery failed: ' + emailResult.message, 'error');
+                    return;
+                }
+                log('✅ Email sent successfully: ' + emailResult.message, 'success');
+                log('📧 Service used: ' + (emailResult.service || 'unknown'), 'info');
+                
+                // Step 4: Final summary
+                log('', 'info');
+                log('🎉 COMPLETE PRODUCTION TEST: SUCCESS!', 'success');
+                log('', 'info');
+                log('📊 Summary:', 'info');
+                log('  ✅ Database: Working', 'success');
+                log('  ✅ Email: Working (' + (emailResult.service || 'unknown') + ')', 'success');
+                log('  ✅ Customer Experience: Complete', 'success');
+                log('', 'info');
+                log('🎯 Your system is READY FOR REAL CUSTOMERS!', 'success');
+                log('📧 Check ' + testCustomer.email + ' for the eBook!', 'info');
+                
+            } catch (error) {
+                log('❌ Production test failed: ' + error.message, 'error');
+                log('Error details: ' + error.stack, 'error');
+            }
+        }
+        
+        async function simulateRealCustomerPurchase() {
+            clearResults();
+            log('👤 Simulating real customer purchase flow...', 'info');
+            
+            const realCustomer = {
+                name: 'John Doe',
+                email: 'simonchumacero26@gmail.com', // Using your email for testing
+                transactionId: 'REAL-CUSTOMER-' + Date.now(),
+                paymentMethod: 'paypal'
+            };
+            
+            try {
+                log('🛒 Customer: ' + realCustomer.name + ' (' + realCustomer.email + ')', 'info');
+                log('💳 Payment Method: PayPal', 'info');
+                log('🔢 Transaction ID: ' + realCustomer.transactionId, 'info');
+                log('', 'info');
+                
+                // Use the main purchase handler
+                log('🔄 Processing purchase through main handler...', 'info');
+                const result = await handleSuccessfulPurchase(realCustomer);
+                
+                if (result.success) {
+                    log('✅ Customer purchase completed successfully!', 'success');
+                    log('📋 ' + result.message, 'success');
+                    log('', 'info');
+                    log('👨‍💼 Customer Experience:', 'info');
+                    log('  1. ✅ Payment processed', 'success');
+                    log('  2. ✅ Purchase recorded', 'success');
+                    log('  3. ✅ eBook email sent', 'success');
+                    log('  4. ✅ Ready to download', 'success');
+                    log('', 'info');
+                    log('📧 The customer (' + realCustomer.email + ') should receive the eBook now!', 'info');
+                } else {
+                    log('❌ Customer purchase failed: ' + result.message, 'error');
+                }
+                
+            } catch (error) {
+                log('❌ Real customer simulation failed: ' + error.message, 'error');
+            }
+        }
     </script>
+    
+    <div class="test-section">
+        <h2>🎉 FINAL PRODUCTION TEST</h2>
+        <button class="test-button" onclick="runCompleteProductionTest()" style="background: #28a745; font-size: 16px; padding: 15px 30px;">
+            🚀 RUN COMPLETE PRODUCTION TEST
+        </button>
+        <button class="test-button" onclick="simulateRealCustomerPurchase()">
+            👤 Simulate Real Customer Purchase
+        </button>
+        <p style="color: #666; font-size: 14px;">
+            Tests the complete flow: PayPal → Database → Email → Customer receives eBook
+        </p>
+    </div>
 </body>
 </html>

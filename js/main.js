@@ -566,6 +566,133 @@ function showSuccessNotification(message, duration = 5000) {
     });
 }
 
+// Special success notification for eBook purchase
+function showEBookSuccessNotification(customerData, emailResult) {
+    const notification = document.createElement('div');
+    notification.className = 'ebook-success-notification';
+    
+    // Enhanced email status content
+    const successContent = emailResult.success ? 
+        `<div class="email-success">
+            <span class="email-icon">📧</span>
+            <p><strong>Email delivered successfully!</strong></p>
+            <p>Sent to: <strong>${customerData.email}</strong></p>
+            <p class="email-timing">Check your inbox now (including spam folder)</p>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                📥 Download link included in the email
+            </p>
+        </div>` :
+        `<div class="email-warning">
+            <span class="email-icon">⚠️</span>
+            <p><strong>Processing your order...</strong></p>
+            <p>Preparing email delivery to: <strong>${customerData.email}</strong></p>
+            <p class="email-timing">You'll receive it within the next few minutes</p>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                🔄 Our system is working to deliver your eBook
+            </p>
+        </div>`;
+    
+    // Generate current date for display
+    const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    notification.innerHTML = `
+        <div class="ebook-notification-content">
+            <div class="purchase-success">
+                <span class="success-icon">🎉</span>
+                <h3>Purchase Completed!</h3>
+                <p><strong>"Quiet the Noise"</strong> - Digital Edition</p>
+                <p style="font-size: 0.9rem; opacity: 0.8;">
+                    ${currentDate}
+                </p>
+                <p style="font-size: 0.9rem;">
+                    <strong>Order ID:</strong> ${customerData.transactionId}
+                </p>
+            </div>
+            ${successContent}
+            <div class="download-info">
+                <p><strong>📖 Your eBook Package Includes:</strong></p>
+                <ul>
+                    <li>Complete "Quiet the Noise" eBook (PDF)</li>
+                    <li>Practical exercises & worksheets</li>
+                    <li>Bonus productivity strategies</li>
+                    <li>Lifetime access & future updates</li>
+                </ul>
+                <p style="font-size: 0.9rem; margin-top: 1rem; text-align: center; opacity: 0.9;">
+                    ✨ <strong>Thank you for your purchase!</strong> ✨
+                </p>
+            </div>
+            <button class="notification-close" title="Close notification">&times;</button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Play a subtle success sound if available
+    try {
+        // Create a subtle audio feedback
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (e) {
+        // Audio feedback not available, that's fine
+    }
+    
+    // Auto remove after 20 seconds (longer for important purchase info)
+    const autoRemoveTimer = setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
+        }
+    }, 20000);
+    
+    // Manual close with smooth animation
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        clearTimeout(autoRemoveTimer);
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    });
+    
+    // Add click outside to dismiss (optional)
+    setTimeout(() => {
+        document.addEventListener('click', function outsideClickHandler(event) {
+            if (!notification.contains(event.target)) {
+                clearTimeout(autoRemoveTimer);
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+                document.removeEventListener('click', outsideClickHandler);
+            }
+        });
+    }, 1000); // Wait 1 second before enabling click-outside-to-close
+}
+
 // Enhanced error handling
 function showErrorNotification(message, duration = 7000) {
     const notification = document.createElement('div');

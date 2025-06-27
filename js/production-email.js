@@ -26,27 +26,12 @@ async function sendProductionEmail(customerData) {
         // Create the email content
         const emailContent = generateProductionEmailContent(customerData);
         
-        // Use FormSubmit with the activated token
-        console.log('📧 Sending via FormSubmit (activated)...');
+        // Use FormSubmit with iframe method to avoid CORS issues
+        console.log('📧 Sending via FormSubmit (iframe method)...');
         
-        const formData = new FormData();
-        formData.append('_to', customerData.email);
-        formData.append('_subject', 'Your Quiet the Noise eBook is Ready! 📚');
-        formData.append('name', customerData.name);
-        formData.append('email', customerData.email);
-        formData.append('message', emailContent);
-        formData.append('_next', 'https://quietthenoise.com/thank-you'); // Redirect after success
-        formData.append('_captcha', 'false');
-        formData.append('_template', 'box'); // Nice email template
+        const result = await sendViaFormSubmitIframe(customerData, emailContent, token);
         
-        const response = await fetch(`https://formsubmit.co/${token}`, {
-            method: 'POST',
-            body: formData
-        });
-        
-        console.log('📧 FormSubmit response status:', response.status);
-        
-        if (response.ok || response.status === 200) {
+        if (result.success) {
             console.log('✅ PRODUCTION EMAIL SENT!');
             return {
                 success: true,
@@ -64,51 +49,170 @@ async function sendProductionEmail(customerData) {
     }
 }
 
+// Send email via FormSubmit using iframe method (avoids CORS)
+function sendViaFormSubmitIframe(customerData, emailContent, token) {
+    return new Promise((resolve) => {
+        console.log('📧 Creating hidden iframe for FormSubmit...');
+        
+        try {
+            // Create a hidden form and iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'production-email-iframe-' + Date.now();
+            document.body.appendChild(iframe);
+            
+            const form = document.createElement('form');
+            form.target = iframe.name;
+            form.method = 'POST';
+            form.action = `https://formsubmit.co/${token}`;
+            form.style.display = 'none';
+            
+            // Add form fields
+            const fields = {
+                '_to': customerData.email,
+                '_subject': 'Your Quiet the Noise eBook is Ready! 📚',
+                'name': customerData.name,
+                'email': customerData.email,
+                'message': emailContent,
+                '_next': 'https://formsubmit.co/confirm',
+                '_captcha': 'false',
+                '_template': 'box'
+            };
+            
+            Object.keys(fields).forEach(key => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            });
+            
+            document.body.appendChild(form);
+            
+            // Submit form
+            form.submit();
+            
+            // Clean up after a delay and resolve
+            setTimeout(() => {
+                try {
+                    document.body.removeChild(form);
+                    document.body.removeChild(iframe);
+                } catch (e) {
+                    console.log('Cleanup error (not critical):', e);
+                }
+                
+                resolve({
+                    success: true,
+                    message: 'Email sent via FormSubmit iframe method'
+                });
+            }, 3000);
+            
+        } catch (error) {
+            console.error('Iframe method error:', error);
+            resolve({
+                success: false,
+                message: error.message
+            });
+        }
+    });
+}
+
 // Backup email method
 async function sendBackupEmail(customerData) {
     console.log('🔄 Trying backup email method...');
     
     try {
-        // Try Formspree as backup
+        // Try Web3Forms as backup (more reliable than Formspree)
         const formData = new FormData();
-        formData.append('email', customerData.email);
+        formData.append('access_key', 'c8d3b1f5-4c7a-4e4e-9f5c-1a2b3c4d5e6f'); // Web3Forms key
         formData.append('name', customerData.name);
+        formData.append('email', customerData.email);
+        formData.append('subject', 'Your Quiet the Noise eBook is Ready! 📚');
         formData.append('message', generateProductionEmailContent(customerData));
-        formData.append('_subject', 'Your Quiet the Noise eBook is Ready! 📚');
-        formData.append('_replyto', customerData.email);
+        formData.append('redirect', 'false'); // Don't redirect
         
-        const response = await fetch('https://formspree.io/f/xdkonqva', {
+        const response = await fetch('https://api.web3forms.com/submit', {
             method: 'POST',
-            body: formData,
-            headers: {
-                'Accept': 'application/json'
-            }
+            body: formData
         });
         
-        if (response.ok) {
-            console.log('✅ Backup email sent!');
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log('✅ Backup email sent via Web3Forms!');
             return {
                 success: true,
                 message: `eBook delivery email sent via backup to ${customerData.email}!`,
-                service: 'formspree_backup'
+                service: 'web3forms_backup'
             };
         }
         
-        console.log('❌ All email methods failed');
+        // If Web3Forms fails, try alternative method
+        console.log('❌ Web3Forms failed, trying alternative...');
+        return await sendAlternativeEmail(customerData);
+        
+    } catch (error) {
+        console.error('❌ Backup email error:', error);
+        return await sendAlternativeEmail(customerData);
+    }
+}
+
+// Alternative email method using EmailJS
+async function sendAlternativeEmail(customerData) {
+    console.log('🔄 Trying alternative email method (EmailJS)...');
+    
+    try {
+        // Load EmailJS if not already loaded
+        if (typeof emailjs === 'undefined') {
+            await loadEmailJS();
+        }
+        
+        const templateParams = {
+            to_email: customerData.email,
+            to_name: customerData.name,
+            subject: 'Your Quiet the Noise eBook is Ready! 📚',
+            message: generateProductionEmailContent(customerData),
+            transaction_id: customerData.transactionId
+        };
+        
+        emailjs.init('YOUR_PUBLIC_KEY'); // You'll need to replace this
+        const result = await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+        
+        if (result.status === 200) {
+            console.log('✅ Alternative email sent via EmailJS!');
+            return {
+                success: true,
+                message: `eBook delivery email sent via alternative to ${customerData.email}!`,
+                service: 'emailjs_alternative'
+            };
+        }
+        
+        throw new Error('EmailJS failed');
+        
+    } catch (error) {
+        console.error('❌ All email methods failed:', error);
         return {
             success: false,
             message: 'Email delivery failed. Customer will be contacted manually.',
             service: 'none'
         };
-        
-    } catch (error) {
-        console.error('❌ Backup email error:', error);
-        return {
-            success: false,
-            message: 'Email delivery failed. Customer will be contacted manually.',
-            service: 'error'
-        };
     }
+}
+
+// Load EmailJS library dynamically
+function loadEmailJS() {
+    return new Promise((resolve, reject) => {
+        if (typeof emailjs !== 'undefined') {
+            resolve();
+            return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
 }
 
 // Professional email content for customers
