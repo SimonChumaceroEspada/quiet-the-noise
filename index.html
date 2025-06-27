@@ -838,6 +838,244 @@
     <script src="./js/purchase-handler.js"></script>
     <script src="./js/production-validation.js"></script>
     <script src="./js/main.js"></script>
+    
+    <!-- Sales Assistant Chat JavaScript -->
+    <script>
+    class SalesAssistantChat {
+        constructor() {
+            this.chatContainer = document.getElementById('salesChat');
+            this.chatTrigger = document.getElementById('chatTrigger');
+            this.chatMessages = document.getElementById('chatMessages');
+            this.chatInput = document.getElementById('chatInput');
+            this.sendButton = document.getElementById('sendMessage');
+            this.minimizeBtn = document.getElementById('minimizeChat');
+            this.closeBtn = document.getElementById('closeChat');
+            this.suggestionBtns = document.querySelectorAll('.suggestion-btn');
+            
+            this.isOpen = false;
+            this.isMinimized = false;
+            this.responses = this.initializeResponses();
+            
+            this.init();
+        }
+        
+        initializeResponses() {
+            return {
+                'what\'s included in the ebook?': {
+                    response: "Great question! 📚 The <strong>Quiet the Noise</strong> eBook includes:<br><br>• 30-day step-by-step program<br>• Science-backed techniques for mental clarity<br>• Anxiety reduction strategies<br>• Focus improvement exercises<br>• Downloadable worksheets<br>• Progress tracking tools<br><br>All for just $1! Would you like to know more about any specific part?",
+                    delay: 1500
+                },
+                'how does the 30-day program work?': {
+                    response: "Excellent question! 📅 The 30-day program is designed to be simple yet effective:<br><br>• <strong>Week 1:</strong> Foundation building & awareness<br>• <strong>Week 2:</strong> Implementing core techniques<br>• <strong>Week 3:</strong> Advanced strategies & habits<br>• <strong>Week 4:</strong> Integration & long-term success<br><br>Each day takes just 10-15 minutes. The program is based on neuroscience research and proven cognitive techniques. Ready to start your transformation?",
+                    delay: 2000
+                },
+                'what\'s your refund policy?': {
+                    response: "We offer a <strong>30-day money-back guarantee</strong> 💰<br><br>If you're not completely satisfied with the eBook, simply contact us within 30 days of purchase for a full refund. No questions asked!<br><br>We're confident you'll love the results, but we want you to feel secure in your investment. Would you like to proceed with your purchase?",
+                    delay: 1200
+                },
+                'is this suitable for beginners?': {
+                    response: "Absolutely! 👤 This eBook is perfect for beginners:<br><br>• No prior experience needed<br>• Step-by-step instructions<br>• Simple, easy-to-follow techniques<br>• Starts with basic concepts<br>• Builds gradually to advanced strategies<br><br>Whether you're new to mental wellness or looking to improve your current practice, this program meets you where you are. Ready to begin your journey to mental clarity?",
+                    delay: 1800
+                },
+                'price': {
+                    response: "The eBook is available for just <strong>$1 USD</strong> 💸<br><br>This is an incredible value for a comprehensive 30-day program that normally would cost much more. The low price is part of our mission to make mental wellness accessible to everyone.<br><br>You get instant digital download access right after purchase. Would you like to get your copy now?",
+                    delay: 1000
+                },
+                'download': {
+                    response: "After purchase, you'll receive instant access! 📥<br><br>• Immediate digital download<br>• PDF format (works on all devices)<br>• No shipping required<br>• Access from anywhere<br><br>The download link will be sent to your email immediately after payment confirmation. Ready to get started?",
+                    delay: 1200
+                },
+                'support': {
+                    response: "We're here to help! 🤝<br><br>You can reach us through:<br>• WhatsApp: +591 75776491<br>• Email support<br>• This chat system<br><br>We typically respond within 24 hours and are committed to your success with the program. What specific help do you need?",
+                    delay: 1000
+                }
+            };
+        }
+        
+        init() {
+            this.bindEvents();
+            this.showWelcomeMessage();
+        }
+        
+        bindEvents() {
+            this.chatTrigger.addEventListener('click', () => this.openChat());
+            this.closeBtn.addEventListener('click', () => this.closeChat());
+            this.minimizeBtn.addEventListener('click', () => this.toggleMinimize());
+            this.sendButton.addEventListener('click', () => this.sendMessage());
+            this.chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.sendMessage();
+            });
+            
+            this.suggestionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const message = btn.dataset.message;
+                    this.sendUserMessage(message);
+                });
+            });
+        }
+        
+        showWelcomeMessage() {
+            setTimeout(() => {
+                if (!this.isOpen) {
+                    this.addNotification();
+                }
+            }, 10000); // Show after 10 seconds
+        }
+        
+        addNotification() {
+            this.chatTrigger.classList.add('notification');
+        }
+        
+        openChat() {
+            this.isOpen = true;
+            this.chatContainer.classList.add('active');
+            this.chatTrigger.classList.add('hidden');
+            this.chatInput.focus();
+        }
+        
+        closeChat() {
+            this.isOpen = false;
+            this.chatContainer.classList.remove('active');
+            this.chatTrigger.classList.remove('hidden');
+        }
+        
+        toggleMinimize() {
+            this.isMinimized = !this.isMinimized;
+            this.chatContainer.classList.toggle('minimized');
+        }
+        
+        sendMessage() {
+            const message = this.chatInput.value.trim();
+            if (!message) return;
+            
+            this.sendUserMessage(message);
+            this.chatInput.value = '';
+        }
+        
+        sendUserMessage(message) {
+            this.addMessage(message, 'user');
+            this.hideSuggestions();
+            this.showTyping();
+            
+            setTimeout(() => {
+                this.hideTyping();
+                this.processMessage(message);
+            }, 1000 + Math.random() * 1000);
+        }
+        
+        processMessage(message) {
+            const lowerMessage = message.toLowerCase();
+            let response = this.findBestResponse(lowerMessage);
+            
+            if (!response) {
+                response = {
+                    response: "I understand you're interested in learning more! 😊<br><br>For the most accurate information about the <strong>Quiet the Noise</strong> eBook, I'd recommend:<br><br>• Checking out the detailed description above<br>• Using our suggested questions<br>• Contacting us directly via WhatsApp<br><br>Is there anything specific about the 30-day mental clarity program you'd like to know?",
+                    delay: 1500
+                };
+            }
+            
+            setTimeout(() => {
+                this.addMessage(response.response, 'bot');
+                this.showSuggestions();
+            }, response.delay);
+        }
+        
+        findBestResponse(message) {
+            // Direct keyword matching
+            for (let key in this.responses) {
+                if (message.includes(key.toLowerCase())) {
+                    return this.responses[key];
+                }
+            }
+            
+            // Contextual matching
+            if (message.includes('cost') || message.includes('much') || message.includes('dollar')) {
+                return this.responses['price'];
+            }
+            
+            if (message.includes('get') || message.includes('buy') || message.includes('purchase')) {
+                return this.responses['download'];
+            }
+            
+            if (message.includes('help') || message.includes('contact') || message.includes('support')) {
+                return this.responses['support'];
+            }
+            
+            if (message.includes('beginner') || message.includes('new') || message.includes('start')) {
+                return this.responses['is this suitable for beginners?'];
+            }
+            
+            return null;
+        }
+        
+        addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.innerHTML = sender === 'bot' ? 
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>' :
+                '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.innerHTML = `<p>${content}</p>`;
+            
+            const messageTime = document.createElement('div');
+            messageTime.className = 'message-time';
+            messageTime.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            messageDiv.appendChild(messageTime);
+            
+            this.chatMessages.appendChild(messageDiv);
+            this.scrollToBottom();
+        }
+        
+        showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message typing';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="message-content">
+                    <p>Sarah is typing<span class="typing-dots">...</span></p>
+                </div>
+            `;
+            
+            this.chatMessages.appendChild(typingDiv);
+            this.scrollToBottom();
+        }
+        
+        hideTyping() {
+            const typing = this.chatMessages.querySelector('.typing');
+            if (typing) typing.remove();
+        }
+        
+        showSuggestions() {
+            document.querySelector('.chat-suggestions').style.display = 'flex';
+        }
+        
+        hideSuggestions() {
+            document.querySelector('.chat-suggestions').style.display = 'none';
+        }
+        
+        scrollToBottom() {
+            this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+        }
+    }
+    
+    // Initialize chat when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        new SalesAssistantChat();
+    });
+    </script>
+    
     <!-- PayPal Integration with Multiple Approaches -->
     <script>
       // PayPal success callback - handles completed payments
@@ -1043,5 +1281,78 @@
         }
       }
     </script>
+    
+    <!-- Sales Assistant Chat -->
+    <div id="salesChat" class="sales-chat">
+        <div class="chat-header">
+            <div class="chat-agent">
+                <div class="agent-avatar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="agent-info">
+                    <span class="agent-name">Sarah</span>
+                    <span class="agent-status">Sales Assistant</span>
+                </div>
+            </div>
+            <div class="chat-controls">
+                <button id="minimizeChat" class="chat-control-btn" aria-label="Minimize chat">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13H5v-2h14v2z"/>
+                    </svg>
+                </button>
+                <button id="closeChat" class="chat-control-btn" aria-label="Close chat">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <div class="message-content">
+                    <p>Hi! 👋 I'm Sarah, your sales assistant. I'm here to help you with any questions about the <strong>Quiet the Noise</strong> eBook.</p>
+                    <p>What would you like to know?</p>
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+        </div>
+        
+        <div class="chat-suggestions">
+            <button class="suggestion-btn" data-message="What's included in the eBook?">📚 What's included?</button>
+            <button class="suggestion-btn" data-message="How does the 30-day program work?">📅 How it works</button>
+            <button class="suggestion-btn" data-message="What's your refund policy?">💰 Refund policy</button>
+            <button class="suggestion-btn" data-message="Is this suitable for beginners?">👤 For beginners?</button>
+        </div>
+        
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type your message..." maxlength="500">
+            <button id="sendMessage" aria-label="Send message">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Chat Trigger Button -->
+    <div id="chatTrigger" class="chat-trigger">
+        <div class="chat-trigger-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+        </div>
+        <div class="chat-notification">
+            <span>💬</span>
+        </div>
+        <div class="chat-trigger-text">Need help?</div>
+    </div>
   </body>
 </html>
