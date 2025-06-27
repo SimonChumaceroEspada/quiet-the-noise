@@ -566,32 +566,7 @@ function showSuccessNotification(message, duration = 5000) {
     });
 }
 
-// Enhanced error handling
-function showErrorNotification(message, duration = 7000) {
-    const notification = document.createElement('div');
-    notification.className = 'error-notification';
-    notification.innerHTML = `
-        <div class="notification-content">
-            <span class="notification-icon">⚠️</span>
-            <span class="notification-message">${message}</span>
-            <button class="notification-close">&times;</button>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.remove();
-        }
-    }, duration);
-    
-    notification.querySelector('.notification-close').addEventListener('click', () => {
-        notification.remove();
-    });
-}
-
-// Enhanced success notification for eBook purchases
+// Special success notification for eBook purchase
 function showEBookSuccessNotification(customerData, emailResult) {
     const notification = document.createElement('div');
     notification.className = 'ebook-success-notification';
@@ -658,7 +633,27 @@ function showEBookSuccessNotification(customerData, emailResult) {
     
     document.body.appendChild(notification);
     
-    // Auto remove after 20 seconds
+    // Play a subtle success sound if available
+    try {
+        // Create a subtle audio feedback
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (e) {
+        // Audio feedback not available, that's fine
+    }
+    
+    // Auto remove after 20 seconds (longer for important purchase info)
     const autoRemoveTimer = setTimeout(() => {
         if (notification.parentNode) {
             notification.style.transform = 'translateX(100%)';
@@ -679,6 +674,47 @@ function showEBookSuccessNotification(customerData, emailResult) {
                 notification.remove();
             }
         }, 300);
+    });
+    
+    // Add click outside to dismiss (optional)
+    setTimeout(() => {
+        document.addEventListener('click', function outsideClickHandler(event) {
+            if (!notification.contains(event.target)) {
+                clearTimeout(autoRemoveTimer);
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+                document.removeEventListener('click', outsideClickHandler);
+            }
+        });
+    }, 1000); // Wait 1 second before enabling click-outside-to-close
+}
+
+// Enhanced error handling
+function showErrorNotification(message, duration = 7000) {
+    const notification = document.createElement('div');
+    notification.className = 'error-notification';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-icon">⚠️</span>
+            <span class="notification-message">${message}</span>
+            <button class="notification-close">&times;</button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, duration);
+    
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        notification.remove();
     });
 }
 
@@ -948,6 +984,19 @@ function initializeApp() {
     console.log(`Landing page initialized with A/B test variant: ${variant}`);
 }
 
+// Utility function: debounce
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Performance monitoring
 function initializePerformanceMonitoring() {
     // Monitor page load performance
@@ -976,19 +1025,6 @@ window.addEventListener('error', function(event) {
 
 // Initialize performance monitoring
 initializePerformanceMonitoring();
-
-// Utility function for debouncing
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
 
 // Export functions for testing
 if (typeof module !== 'undefined' && module.exports) {
