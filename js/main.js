@@ -226,7 +226,7 @@ function initializePaymentProcessing() {
 function initializePayPalTracking() {
     // Track when PayPal button is loaded
     const checkPayPalLoaded = setInterval(() => {
-        const paypalContainer = document.getElementById('paypal-container-T62JMDAV6VUBQ');
+        const paypalContainer = document.getElementById('paypal-container-C87X4VN8GQE2G');
         if (paypalContainer && paypalContainer.children.length > 0) {
             clearInterval(checkPayPalLoaded);
             

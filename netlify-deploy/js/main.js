@@ -226,7 +226,7 @@ function initializePaymentProcessing() {
 function initializePayPalTracking() {
     // Track when PayPal button is loaded
     const checkPayPalLoaded = setInterval(() => {
-        const paypalContainer = document.getElementById('paypal-container-T62JMDAV6VUBQ');
+        const paypalContainer = document.getElementById('paypal-container-C87X4VN8GQE2G');
         if (paypalContainer && paypalContainer.children.length > 0) {
             clearInterval(checkPayPalLoaded);
             
@@ -591,6 +591,97 @@ function showErrorNotification(message, duration = 7000) {
     });
 }
 
+// Enhanced success notification for eBook purchases
+function showEBookSuccessNotification(customerData, emailResult) {
+    const notification = document.createElement('div');
+    notification.className = 'ebook-success-notification';
+    
+    // Enhanced email status content
+    const successContent = emailResult.success ? 
+        `<div class="email-success">
+            <span class="email-icon">📧</span>
+            <p><strong>Email delivered successfully!</strong></p>
+            <p>Sent to: <strong>${customerData.email}</strong></p>
+            <p class="email-timing">Check your inbox now (including spam folder)</p>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                📥 Download link included in the email
+            </p>
+        </div>` :
+        `<div class="email-warning">
+            <span class="email-icon">⚠️</span>
+            <p><strong>Processing your order...</strong></p>
+            <p>Preparing email delivery to: <strong>${customerData.email}</strong></p>
+            <p class="email-timing">You'll receive it within the next few minutes</p>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+                🔄 Our system is working to deliver your eBook
+            </p>
+        </div>`;
+    
+    // Generate current date for display
+    const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    notification.innerHTML = `
+        <div class="ebook-notification-content">
+            <div class="purchase-success">
+                <span class="success-icon">🎉</span>
+                <h3>Purchase Completed!</h3>
+                <p><strong>"Quiet the Noise"</strong> - Digital Edition</p>
+                <p style="font-size: 0.9rem; opacity: 0.8;">
+                    ${currentDate}
+                </p>
+                <p style="font-size: 0.9rem;">
+                    <strong>Order ID:</strong> ${customerData.transactionId}
+                </p>
+            </div>
+            ${successContent}
+            <div class="download-info">
+                <p><strong>📖 Your eBook Package Includes:</strong></p>
+                <ul>
+                    <li>Complete "Quiet the Noise" eBook (PDF)</li>
+                    <li>Practical exercises & worksheets</li>
+                    <li>Bonus productivity strategies</li>
+                    <li>Lifetime access & future updates</li>
+                </ul>
+                <p style="font-size: 0.9rem; margin-top: 1rem; text-align: center; opacity: 0.9;">
+                    ✨ <strong>Thank you for your purchase!</strong> ✨
+                </p>
+            </div>
+            <button class="notification-close" title="Close notification">&times;</button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 20 seconds
+    const autoRemoveTimer = setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
+        }
+    }, 20000);
+    
+    // Manual close with smooth animation
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        clearTimeout(autoRemoveTimer);
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    });
+}
+
 // Analytics and tracking
 function initializeAnalytics() {
     // Initialize Google Analytics (replace with your tracking ID)
@@ -857,6 +948,23 @@ function initializeApp() {
     console.log(`Landing page initialized with A/B test variant: ${variant}`);
 }
 
+// Performance monitoring
+function initializePerformanceMonitoring() {
+    // Monitor page load performance
+    window.addEventListener('load', function() {
+        setTimeout(() => {
+            const perfData = performance.getEntriesByType('navigation')[0];
+            if (perfData) {
+                trackEvent('page_performance', {
+                    load_time: Math.round(perfData.loadEventEnd - perfData.fetchStart),
+                    dom_content_loaded: Math.round(perfData.domContentLoadedEventEnd - perfData.fetchStart),
+                    first_byte: Math.round(perfData.responseStart - perfData.fetchStart)
+                });
+            }
+        }, 0);
+    });
+}
+
 // Error handling
 window.addEventListener('error', function(event) {
     trackEvent('javascript_error', {
@@ -868,6 +976,19 @@ window.addEventListener('error', function(event) {
 
 // Initialize performance monitoring
 initializePerformanceMonitoring();
+
+// Utility function for debouncing
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
 // Export functions for testing
 if (typeof module !== 'undefined' && module.exports) {

@@ -10,8 +10,8 @@ const CONFIG = {
     STRIPE_PUBLISHABLE_KEY: 'pk_test_YOUR_STRIPE_KEY_HERE', // Replace with your Stripe key
     
     // Supabase Configuration
-    SUPABASE_URL: 'https://your-project.supabase.co', // Replace with your Supabase URL
-    SUPABASE_ANON_KEY: 'your-anon-key-here', // Replace with your Supabase anon key
+    SUPABASE_URL: 'https://qfuyqrlspdvxoxkgvlss.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmdXlxcmxzcGR2eG94a2d2bHNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA5NDc5OTIsImV4cCI6MjA2NjUyMzk5Mn0.EYzis56Hb3Qay2gdoCkCTZ6JkOQGEPRdEzcZ0FbfgUU',
     
     // EmailJS Configuration
     EMAILJS_SERVICE_ID: 'your-service-id', // Replace with your EmailJS service ID

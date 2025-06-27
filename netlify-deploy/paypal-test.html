@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPal Hosted Button Test - Quiet the Noise</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .paypal-container {
+            background: #fff;
+            padding: 20px;
+            border: 2px solid #0070ba;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .status.success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .status.error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .status.info { background: #cce7ff; border: 1px solid #b3d7ff; color: #004085; }
+        .debug-log {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        button {
+            background: #0070ba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #005ea6; }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #1a365d;
+            margin: 0;
+        }
+        .header p {
+            color: #4a5568;
+            margin: 10px 0 0 0;
+        }
+    </style>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- PayPal SDK - PRODUCTION with hosted buttons -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAdtIP4N39_Grc65N4rXgCcuW2TEEB5MyXfq1r3BGmNWFTaK3OMhKc_3zIZl4oI622oMTkhOcSJ_OriNo&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 PayPal Hosted Button Test</h1>
+        <p>Test the official PayPal hosted button integration for production</p>
+    </div>
+
+    <div class="test-container">
+        <h2>📋 System Status</h2>
+        <div id="system-status"></div>
+        
+        <div class="test-section">
+            <h3>🅿️ PayPal Hosted Button</h3>
+            <p><strong>Button ID:</strong> DG2V4FLX49RM8</p>
+            <p><strong>Price:</strong> $1.00 USD</p>
+            <p><strong>Product:</strong> Quiet the Noise eBook</p>
+            
+            <div class="paypal-container">
+                <div id="paypal-container-DG2V4FLX49RM8"></div>
+            </div>
+            
+            <div id="paypal-status" class="status info">
+                ⏳ Initializing PayPal button...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Test Functions</h3>
+            <button onclick="testSupabaseConnection()">Test Supabase</button>
+            <button onclick="testEmailService()">Test Email Service</button>
+            <button onclick="clearLogs()">Clear Logs</button>
+            <button onclick="downloadLogs()">Download Logs</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Debug Logs</h3>
+            <div id="debug-log" class="debug-log"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="./js/config.js"></script>
+    <script src="./js/debug-supabase.js"></script>
+    <script src="./js/backup-email-service.js"></script>
+    <script src="./js/production-email.js"></script>
+    <script src="./js/purchase-handler.js"></script>
+    <script src="./js/paypal-hosted-handler.js"></script>
+
+    <script>
+        // Enhanced logging for testing
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        
+        const logContainer = document.getElementById('debug-log');
+        const statusContainer = document.getElementById('system-status');
+        const paypalStatus = document.getElementById('paypal-status');
+        
+        let allLogs = [];
+
+        function addLog(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            allLogs.push(logEntry);
+            
+            const logElement = document.createElement('div');
+            logElement.textContent = logEntry;
+            logElement.style.color = type === 'error' ? '#ff6b6b' : 
+                                   type === 'warn' ? '#ffd93d' : '#00ff00';
+            
+            logContainer.appendChild(logElement);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Override console methods
+        console.log = function(...args) {
+            originalConsoleLog.apply(console, args);
+            addLog(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalConsoleError.apply(console, args);
+            addLog('ERROR: ' + args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalConsoleWarn.apply(console, args);
+            addLog('WARN: ' + args.join(' '), 'warn');
+        };
+
+        // System status check
+        function checkSystemStatus() {
+            let status = '<div class="status success">✅ Page loaded successfully</div>';
+            
+            // Check PayPal SDK
+            if (typeof paypal !== 'undefined') {
+                status += '<div class="status success">✅ PayPal SDK loaded</div>';
+                if (paypal.HostedButtons) {
+                    status += '<div class="status success">✅ PayPal HostedButtons available</div>';
+                } else {
+                    status += '<div class="status error">❌ PayPal HostedButtons not available</div>';
+                }
+            } else {
+                status += '<div class="status error">❌ PayPal SDK not loaded</div>';
+            }
+            
+            // Check Supabase
+            if (typeof supabase !== 'undefined') {
+                status += '<div class="status success">✅ Supabase library loaded</div>';
+            } else {
+                status += '<div class="status error">❌ Supabase library not loaded</div>';
+            }
+            
+            // Check Config
+            if (typeof CONFIG !== 'undefined') {
+                status += '<div class="status success">✅ Configuration loaded</div>';
+            } else {
+                status += '<div class="status error">❌ Configuration not loaded</div>';
+            }
+            
+            statusContainer.innerHTML = status;
+        }
+
+        // Test functions
+        async function testSupabaseConnection() {
+            addLog('Testing Supabase connection...');
+            try {
+                if (typeof testSupabaseConnection !== 'undefined') {
+                    await testSupabaseConnection();
+                    addLog('✅ Supabase test completed');
+                } else {
+                    addLog('❌ Supabase test function not available');
+                }
+            } catch (error) {
+                addLog('❌ Supabase test failed: ' + error.message);
+            }
+        }
+
+        async function testEmailService() {
+            addLog('Testing email service...');
+            try {
+                const testData = {
+                    name: 'Test Customer',
+                    email: 'test@example.com',
+                    transactionId: 'test-' + Date.now()
+                };
+                
+                if (typeof sendPurchaseEmail === 'function') {
+                    const result = await sendPurchaseEmail(testData.email, testData.name, testData.transactionId);
+                    addLog('✅ Email test result: ' + JSON.stringify(result));
+                } else {
+                    addLog('❌ Email function not available');
+                }
+            } catch (error) {
+                addLog('❌ Email test failed: ' + error.message);
+            }
+        }
+
+        function clearLogs() {
+            logContainer.innerHTML = '';
+            allLogs = [];
+            addLog('Logs cleared');
+        }
+
+        function downloadLogs() {
+            const logText = allLogs.join('\n');
+            const blob = new Blob([logText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'paypal-test-logs-' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // PayPal button status monitoring
+        function monitorPayPalButton() {
+            const container = document.getElementById('paypal-container-DG2V4FLX49RM8');
+            let checkCount = 0;
+            const maxChecks = 20;
+            
+            const checkButton = () => {
+                checkCount++;
+                
+                if (container.innerHTML.trim()) {
+                    paypalStatus.className = 'status success';
+                    paypalStatus.textContent = '✅ PayPal button loaded successfully';
+                    addLog('✅ PayPal button rendered in container');
+                } else if (checkCount >= maxChecks) {
+                    paypalStatus.className = 'status error';
+                    paypalStatus.textContent = '❌ PayPal button failed to load';
+                    addLog('❌ PayPal button failed to render after ' + maxChecks + ' attempts');
+                } else {
+                    setTimeout(checkButton, 1000);
+                }
+            };
+            
+            setTimeout(checkButton, 2000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('🚀 PayPal Test Page Initialized');
+            checkSystemStatus();
+            monitorPayPalButton();
+        });
+
+        // Override PayPal hosted handler callbacks for testing
+        if (window.paypalHostedHandler) {
+            const originalHandleSuccess = window.paypalHostedHandler.handlePayPalSuccess.bind(window.paypalHostedHandler);
+            
+            window.paypalHostedHandler.handlePayPalSuccess = async function(details, data) {
+                addLog('🎉 TEST: PayPal success triggered!');
+                addLog('PayPal Details: ' + JSON.stringify(details, null, 2));
+                addLog('PayPal Data: ' + JSON.stringify(data, null, 2));
+                
+                return await originalHandleSuccess(details, data);
+            };
+        }
+    </script>
+</body>
+</html>

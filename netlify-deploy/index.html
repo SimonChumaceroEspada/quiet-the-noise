@@ -419,7 +419,12 @@
                                 
                                 <!-- PayPal Payment Button -->
                                 <div class="payment-option paypal-option">
-                                    <div id="paypal-container-DG2V4FLX49RM8"></div>
+                                    <div id="paypal-container-C87X4VN8GQE2G"></div>
+                                    <script>
+                                      paypal.HostedButtons({
+                                        hostedButtonId: "C87X4VN8GQE2G",
+                                      }).render("#paypal-container-C87X4VN8GQE2G")
+                                    </script>
                                 </div>
                             </div>
                             
@@ -659,7 +664,7 @@
             
             // Backup render en caso de que falle el primero
             setTimeout(() => {
-                const container = document.getElementById('paypal-container-DG2V4FLX49RM8');
+                const container = document.getElementById('paypal-container-C87X4VN8GQE2G');
                 if (container && (!container.innerHTML.trim() || container.innerHTML.includes('Error'))) {
                     console.log('🔄 Retry rendering PayPal buttons...');
                     renderNativePayPalButton();
@@ -672,7 +677,7 @@
             console.log('🔄 Rendering native PayPal button as fallback...');
             
             // Create a fallback container
-            const container = document.getElementById('paypal-container-DG2V4FLX49RM8');
+            const container = document.getElementById('paypal-container-C87X4VN8GQE2G');
             if (container && typeof paypal !== 'undefined' && paypal.Buttons) {
                 container.innerHTML = ''; // Clear hosted button
                 
@@ -714,7 +719,7 @@
                         console.log('❌ PayPal payment cancelled:', data);
                         alert('ℹ️ Payment was cancelled.');
                     }
-                }).render('#paypal-container-DG2V4FLX49RM8').then(function() {
+                }).render('#paypal-container-C87X4VN8GQE2G').then(function() {
                     console.log('✅ PayPal native button rendered successfully');
                 }).catch(function(err) {
                     console.error('❌ PayPal native button render failed:', err);
