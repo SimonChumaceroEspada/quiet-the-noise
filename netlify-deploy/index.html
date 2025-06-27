@@ -1,608 +1,834 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Quiet the Noise: 30 Days to Calmer Thoughts, Less Anxiety, and Greater Mental Clarity. A science-based program to achieve mental clarity and reduce anxiety.">
-    <meta name="keywords" content="mental clarity, anxiety relief, mindfulness, cognitive wellness, mental health, stress reduction">
-    <meta name="author" content="Simon">
-    <meta property="og:title" content="Quiet the Noise - 30 Days to Mental Clarity">
-    <meta property="og:description" content="Transform your mind in 30 days with this science-based program for mental clarity and anxiety reduction.">    <meta property="og:image" content="./assets/book-cover.jpg">
-    <meta property="og:url" content="https://quietthenoise.com">
-    <meta name="twitter:card" content="summary_large_image">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Quiet the Noise: 30 Days to Calmer Thoughts, Less Anxiety, and Greater Mental Clarity. A science-based program to achieve mental clarity and reduce anxiety."
+    />
+    <meta
+      name="keywords"
+      content="mental clarity, anxiety relief, mindfulness, cognitive wellness, mental health, stress reduction"
+    />
+    <meta name="author" content="Simon" />
+    <meta
+      property="og:title"
+      content="Quiet the Noise - 30 Days to Mental Clarity"
+    />
+    <meta
+      property="og:description"
+      content="Transform your mind in 30 days with this science-based program for mental clarity and anxiety reduction."
+    />
+    <meta property="og:image" content="./assets/book-cover.jpg" />
+    <meta property="og:url" content="https://quietthenoise.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <title>Quiet the Noise - 30 Days to Calmer Thoughts & Mental Clarity</title>
-    
+
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Book",
-      "name": "Quiet the Noise: 30 Days to Calmer Thoughts, Less Anxiety, and Greater Mental Clarity",
-      "author": {
-        "@type": "Person",
-        "name": "Your Name Here"
-      },
-      "description": "Transform your mind in 30 days with this science-based program for mental clarity and anxiety reduction. Proven techniques to quiet racing thoughts and reduce anxiety.",
-      "image": "./assets/book-cover.jpg",
-      "bookFormat": "EBook",
-      "genre": ["Self-Help", "Mental Health", "Mindfulness"],
-      "inLanguage": "en-US",
-      "numberOfPages": "150",      "offers": {
-        "@type": "Offer",
-        "price": "1",
-        "priceCurrency": "USD",
-        "availability": "https://schema.org/InStock",
-        "seller": {
-          "@type": "Organization",
-          "name": "Quiet the Noise"
+      {
+        "@context": "https://schema.org",
+        "@type": "Book",
+        "name": "Quiet the Noise: 30 Days to Calmer Thoughts, Less Anxiety, and Greater Mental Clarity",
+        "author": {
+          "@type": "Person",
+          "name": "Your Name Here"
+        },
+        "description": "Transform your mind in 30 days with this science-based program for mental clarity and anxiety reduction. Proven techniques to quiet racing thoughts and reduce anxiety.",
+        "image": "./assets/book-cover.jpg",
+        "bookFormat": "EBook",
+        "genre": ["Self-Help", "Mental Health", "Mindfulness"],
+        "inLanguage": "en-US",
+        "numberOfPages": "150",
+        "offers": {
+          "@type": "Offer",
+          "price": "1",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "Quiet the Noise"
+          }
         }
       }
-    }
     </script>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-      <!-- CSS -->
-    <link rel="stylesheet" href="./css/styles.css">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <!-- CSS -->
+    <link rel="stylesheet" href="./css/styles.css" />
+
     <!-- Supabase -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
+
     <!-- PayPal SDK - PRODUCTION -->
     <script src="https://www.paypal.com/sdk/js?client-id=BAAdtIP4N39_Grc65N4rXgCcuW2TEEB5MyXfq1r3BGmNWFTaK3OMhKc_3zIZl4oI622oMTkhOcSJ_OriNo&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
-    
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
-    <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
-    
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.ico" />
+
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
-    
+
     <!-- Analytics placeholder -->
     <!-- Google Analytics will be added here -->
-</head>
-<body>
+  </head>
+  <body>
     <!-- Header -->
     <header class="header">
-        <nav class="nav">
-            <div class="nav-container">
-                <div class="nav-logo">
-
-                </div>
-                <div class="nav-links">
-                    <a href="#benefits" class="nav-link">Benefits</a>
-                    <a href="#preview" class="nav-link">Preview</a>
-                    <a href="#testimonials" class="nav-link">Reviews</a>
-                    <a href="#purchase" class="nav-link cta-button">Get Your Copy</a>
-                </div>
-                <div class="mobile-menu-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-        </nav>
+      <nav class="nav">
+        <div class="nav-container">
+          <div class="nav-logo"></div>
+          <div class="nav-links">
+            <a href="#benefits" class="nav-link">Benefits</a>
+            <a href="#preview" class="nav-link">Preview</a>
+            <a href="#testimonials" class="nav-link">Reviews</a>
+            <a href="#purchase" class="nav-link cta-button">Get Your Copy</a>
+          </div>
+          <div class="mobile-menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </nav>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <div class="hero-badge">
-                        <span>✨ Science-Based Program</span>
-                    </div>
-                    <h1 class="hero-title">
-                        Transform Your Mind in 
-                        <span class="highlight">30 Days</span>
-                    </h1>
-                    <h2 class="hero-subtitle">
-                        Quiet the Noise: 30 Days to Calmer Thoughts, Less Anxiety, and Greater Mental Clarity
-                    </h2>
-                    <p class="hero-description">
-                        A proven, step-by-step program that helps you break free from mental clutter, reduce anxiety, and achieve lasting mental clarity using neuroscience-backed techniques.
-                    </p>
-                    
-                    <div class="hero-benefits">
-                        <div class="benefit-item">
-                            <span class="benefit-icon">🧠</span>
-                            <span>Reduce Mental Noise</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">😌</span>
-                            <span>Lower Anxiety</span>
-                        </div>
-                        <div class="benefit-item">
-                            <span class="benefit-icon">🎯</span>
-                            <span>Improve Focus</span>
-                        </div>
-                    </div>                    <div class="hero-cta">
-                        <a href="#purchase" class="cta-primary">
-                            Get Instant Access - $1 USD
-                            <span class="cta-subtext">Digital Download • 30-Day Money Back Guarantee</span>
-                        </a>                        <p class="social-proof">
-                            ⭐ New Release • Science-Based Mental Clarity Program
-                        </p>
-                        <div class="hero-social">
-                            <span class="social-text">Follow our journey:</span>
-                            <div class="hero-social-links">
-                                <a href="https://www.facebook.com/profile.php?id=61577312729734" target="_blank" rel="noopener noreferrer" class="hero-social-link" aria-label="Facebook">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://www.instagram.com/quietthenoise11/" target="_blank" rel="noopener noreferrer" class="hero-social-link" aria-label="Instagram">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://www.youtube.com/@QuietTheNoise-p9b" target="_blank" rel="noopener noreferrer" class="hero-social-link" aria-label="YouTube">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                                    </svg>
-                                </a>
-                                <a href="https://www.tiktok.com/@quiet.the.noise" target="_blank" rel="noopener noreferrer" class="hero-social-link" aria-label="TikTok">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="hero-visual">
-                    <div class="book-showcase">
-                        <img src="./assets/book-cover.jpg" alt="Quiet the Noise Book Cover" class="book-cover">
-                        <div class="book-shadow"></div>
-                    </div>
-                    <div class="floating-elements">
-                        <div class="float-element float-1">30 Days</div>
-                        <div class="float-element float-2">Science-Based</div>
-                        <div class="float-element float-3">Proven Results</div>
-                    </div>
-                </div>
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-text">
+            <div class="hero-badge">
+              <span>✨ Science-Based Program</span>
             </div>
+            <h1 class="hero-title">
+              Transform Your Mind in
+              <span class="highlight">30 Days</span>
+            </h1>
+            <h2 class="hero-subtitle">
+              Quiet the Noise: 30 Days to Calmer Thoughts, Less Anxiety, and
+              Greater Mental Clarity
+            </h2>
+            <p class="hero-description">
+              A proven, step-by-step program that helps you break free from
+              mental clutter, reduce anxiety, and achieve lasting mental clarity
+              using neuroscience-backed techniques.
+            </p>
+
+            <div class="hero-benefits">
+              <div class="benefit-item">
+                <span class="benefit-icon">🧠</span>
+                <span>Reduce Mental Noise</span>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">😌</span>
+                <span>Lower Anxiety</span>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">🎯</span>
+                <span>Improve Focus</span>
+              </div>
+            </div>
+            <div class="hero-cta">
+              <a href="#purchase" class="cta-primary">
+                Get Instant Access - $1 USD
+                <span class="cta-subtext"
+                  >Digital Download • 30-Day Money Back Guarantee</span
+                >
+              </a>
+              <p class="social-proof">
+                ⭐ New Release • Science-Based Mental Clarity Program
+              </p>
+              <div class="hero-social">
+                <span class="social-text">Follow our journey:</span>
+                <div class="hero-social-links">
+                  <a
+                    href="https://www.facebook.com/profile.php?id=61577312729734"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hero-social-link"
+                    aria-label="Facebook"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    href="https://www.instagram.com/quietthenoise11/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hero-social-link"
+                    aria-label="Instagram"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    href="https://www.youtube.com/@QuietTheNoise-p9b"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hero-social-link"
+                    aria-label="YouTube"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    href="https://www.tiktok.com/@quiet.the.noise"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hero-social-link"
+                    aria-label="TikTok"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="book-showcase">
+              <img
+                src="./assets/book-cover.jpg"
+                alt="Quiet the Noise Book Cover"
+                class="book-cover"
+              />
+              <div class="book-shadow"></div>
+            </div>
+            <div class="floating-elements">
+              <div class="float-element float-1">30 Days</div>
+              <div class="float-element float-2">Science-Based</div>
+              <div class="float-element float-3">Proven Results</div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Trust Indicators -->
     <section class="trust-section">
-        <div class="container">
-            <div class="trust-indicators">
-                <div class="trust-item">
-                    <span class="trust-icon">🔒</span>
-                    <span>Secure Payment</span>
-                </div>
-                <div class="trust-item">
-                    <span class="trust-icon">📱</span>
-                    <span>Instant Download</span>
-                </div>
-                <div class="trust-item">
-                    <span class="trust-icon">💰</span>
-                    <span>30-Day Guarantee</span>
-                </div>
-                <div class="trust-item">
-                    <span class="trust-icon">📚</span>
-                    <span>PDF + ePub</span>
-                </div>
-            </div>
+      <div class="container">
+        <div class="trust-indicators">
+          <div class="trust-item">
+            <span class="trust-icon">🔒</span>
+            <span>Secure Payment</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">📱</span>
+            <span>Instant Download</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">💰</span>
+            <span>30-Day Guarantee</span>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon">📚</span>
+            <span>PDF + ePub</span>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Problem/Solution Section -->
     <section class="problem-solution">
-        <div class="container">
-            <div class="problem-section">
-                <h2 class="section-title">Are You Trapped in Mental Noise?</h2>
-                <div class="problem-grid">
-                    <div class="problem-item">
-                        <span class="problem-icon">🌪️</span>
-                        <h3>Racing Thoughts</h3>
-                        <p>Your mind feels like a browser with 47 tabs open, constantly jumping between worries, plans, and what-ifs.</p>
-                    </div>
-                    <div class="problem-item">
-                        <span class="problem-icon">😰</span>
-                        <h3>Persistent Anxiety</h3>
-                        <p>That low-grade worry that hums in the background of your consciousness, making it hard to relax or enjoy the moment.</p>
-                    </div>
-                    <div class="problem-item">
-                        <span class="problem-icon">🎯</span>
-                        <h3>Scattered Focus</h3>
-                        <p>Difficulty concentrating on important tasks while your mind wanders to everything except what you need to do.</p>
-                    </div>
-                </div>
+      <div class="container">
+        <div class="problem-section">
+          <h2 class="section-title">Are You Trapped in Mental Noise?</h2>
+          <div class="problem-grid">
+            <div class="problem-item">
+              <span class="problem-icon">🌪️</span>
+              <h3>Racing Thoughts</h3>
+              <p>
+                Your mind feels like a browser with 47 tabs open, constantly
+                jumping between worries, plans, and what-ifs.
+              </p>
             </div>
-            
-            <div class="solution-section">
-                <h2 class="section-title">The Solution: A Systematic Approach to Mental Clarity</h2>
-                <p class="solution-intro">
-                    "Quiet the Noise" isn't another generic mindfulness book. It's a precise, 30-day protocol that methodically addresses the root causes of mental clutter using proven neuroscience and psychology techniques.
-                </p>
+            <div class="problem-item">
+              <span class="problem-icon">😰</span>
+              <h3>Persistent Anxiety</h3>
+              <p>
+                That low-grade worry that hums in the background of your
+                consciousness, making it hard to relax or enjoy the moment.
+              </p>
             </div>
+            <div class="problem-item">
+              <span class="problem-icon">🎯</span>
+              <h3>Scattered Focus</h3>
+              <p>
+                Difficulty concentrating on important tasks while your mind
+                wanders to everything except what you need to do.
+              </p>
+            </div>
+          </div>
         </div>
+
+        <div class="solution-section">
+          <h2 class="section-title">
+            The Solution: A Systematic Approach to Mental Clarity
+          </h2>
+          <p class="solution-intro">
+            "Quiet the Noise" isn't another generic mindfulness book. It's a
+            precise, 30-day protocol that methodically addresses the root causes
+            of mental clutter using proven neuroscience and psychology
+            techniques.
+          </p>
+        </div>
+      </div>
     </section>
 
     <!-- Benefits Section -->
     <section id="benefits" class="benefits-section">
-        <div class="container">
-            <h2 class="section-title">Transform Your Mental Experience in 30 Days</h2>
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-header">
-                        <span class="benefit-number">01</span>
-                        <h3>Identify Your Mental Noise Triggers</h3>
-                    </div>
-                    <p>Discover the specific external, internal, and historical triggers that create mental clutter in your unique life situation.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-header">
-                        <span class="benefit-number">02</span>
-                        <h3>Master Thought Pattern Interruption</h3>
-                    </div>
-                    <p>Learn evidence-based techniques to interrupt rumination, worry cycles, and negative thinking patterns before they take over.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-header">
-                        <span class="benefit-number">03</span>
-                        <h3>Create Clarity-Supporting Environments</h3>
-                    </div>
-                    <p>Engineer your physical and digital spaces to automatically support mental clarity and reduce cognitive overload.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-header">
-                        <span class="benefit-number">04</span>
-                        <h3>Build Sustainable Daily Habits</h3>
-                    </div>
-                    <p>Develop a personalized routine that protects your mental peace and maintains clarity long after the 30 days.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-header">
-                        <span class="benefit-number">05</span>
-                        <h3>Improve Focus and Productivity</h3>
-                    </div>
-                    <p>Experience measurable improvements in concentration, decision-making, and creative problem-solving abilities.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-header">
-                        <span class="benefit-number">06</span>
-                        <h3>Reduce Anxiety and Mental Fatigue</h3>
-                    </div>
-                    <p>Feel the relief of a calmer mind that serves you rather than exhausts you throughout your day.</p>
-                </div>
+      <div class="container">
+        <h2 class="section-title">
+          Transform Your Mental Experience in 30 Days
+        </h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-header">
+              <span class="benefit-number">01</span>
+              <h3>Identify Your Mental Noise Triggers</h3>
             </div>
+            <p>
+              Discover the specific external, internal, and historical triggers
+              that create mental clutter in your unique life situation.
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-header">
+              <span class="benefit-number">02</span>
+              <h3>Master Thought Pattern Interruption</h3>
+            </div>
+            <p>
+              Learn evidence-based techniques to interrupt rumination, worry
+              cycles, and negative thinking patterns before they take over.
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-header">
+              <span class="benefit-number">03</span>
+              <h3>Create Clarity-Supporting Environments</h3>
+            </div>
+            <p>
+              Engineer your physical and digital spaces to automatically support
+              mental clarity and reduce cognitive overload.
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-header">
+              <span class="benefit-number">04</span>
+              <h3>Build Sustainable Daily Habits</h3>
+            </div>
+            <p>
+              Develop a personalized routine that protects your mental peace and
+              maintains clarity long after the 30 days.
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-header">
+              <span class="benefit-number">05</span>
+              <h3>Improve Focus and Productivity</h3>
+            </div>
+            <p>
+              Experience measurable improvements in concentration,
+              decision-making, and creative problem-solving abilities.
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-header">
+              <span class="benefit-number">06</span>
+              <h3>Reduce Anxiety and Mental Fatigue</h3>
+            </div>
+            <p>
+              Feel the relief of a calmer mind that serves you rather than
+              exhausts you throughout your day.
+            </p>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Program Preview -->
     <section id="preview" class="preview-section">
-        <div class="container">
-            <h2 class="section-title">Inside the 30-Day Program</h2>
-            <div class="preview-content">
-                <div class="preview-phases">
-                    <div class="phase-card">
-                        <div class="phase-header">
-                            <span class="phase-number">Phase I</span>
-                            <h3>Understanding Your Mental Landscape</h3>
-                            <span class="phase-days">Days 1-5</span>
-                        </div>
-                        <ul class="phase-features">
-                            <li>The Science of Mental Noise</li>
-                            <li>Identifying Your Clutter Triggers</li>
-                            <li>The Environment-Mind Connection</li>
-                            <li>Personal Mental Noise Assessment</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="phase-card">
-                        <div class="phase-header">
-                            <span class="phase-number">Phase II</span>
-                            <h3>The 30-Day Mental Clarity Protocol</h3>
-                            <span class="phase-days">Days 6-30</span>
-                        </div>
-                        <ul class="phase-features">
-                            <li>Foundation Days (Days 1-5)</li>
-                            <li>Pattern Interruption (Days 6-12)</li>
-                            <li>Cognitive Restructuring (Days 13-20)</li>
-                            <li>Integration & Mastery (Days 21-30)</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="phase-card">
-                        <div class="phase-header">
-                            <span class="phase-number">Phase III</span>
-                            <h3>Maintaining Mental Clarity</h3>
-                            <span class="phase-days">Beyond 30 Days</span>
-                        </div>
-                        <ul class="phase-features">
-                            <li>Long-term Maintenance Strategies</li>
-                            <li>Troubleshooting Common Setbacks</li>
-                            <li>Advanced Techniques</li>
-                            <li>Building Your Clarity Lifestyle</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="preview-sample">
-                    <h3>Sample Chapter: Day 1 - Intentional Awareness</h3>
-                    <div class="sample-content">
-                        <p><strong>Morning Practice (10 minutes)</strong></p>
-                        <p>Complete a baseline Mental Noise Assessment, rating your current mental clarity on a scale of 1-10 in various categories. Set your intention for the program, writing a specific statement about what mental clarity would mean for your life.</p>
-                        
-                        <p><strong>The Science Behind It</strong></p>
-                        <p>Research on metacognition (thinking about thinking) shows that simply observing our thought patterns creates the neural distance needed to begin changing them...</p>
-                        
-                        <a href="#purchase" class="sample-cta">Get Full Access to All 30 Days</a>
-                    </div>
-                </div>
+      <div class="container">
+        <h2 class="section-title">Inside the 30-Day Program</h2>
+        <div class="preview-content">
+          <div class="preview-phases">
+            <div class="phase-card">
+              <div class="phase-header">
+                <span class="phase-number">Phase I</span>
+                <h3>Understanding Your Mental Landscape</h3>
+                <span class="phase-days">Days 1-5</span>
+              </div>
+              <ul class="phase-features">
+                <li>The Science of Mental Noise</li>
+                <li>Identifying Your Clutter Triggers</li>
+                <li>The Environment-Mind Connection</li>
+                <li>Personal Mental Noise Assessment</li>
+              </ul>
             </div>
+
+            <div class="phase-card">
+              <div class="phase-header">
+                <span class="phase-number">Phase II</span>
+                <h3>The 30-Day Mental Clarity Protocol</h3>
+                <span class="phase-days">Days 6-30</span>
+              </div>
+              <ul class="phase-features">
+                <li>Foundation Days (Days 1-5)</li>
+                <li>Pattern Interruption (Days 6-12)</li>
+                <li>Cognitive Restructuring (Days 13-20)</li>
+                <li>Integration & Mastery (Days 21-30)</li>
+              </ul>
+            </div>
+
+            <div class="phase-card">
+              <div class="phase-header">
+                <span class="phase-number">Phase III</span>
+                <h3>Maintaining Mental Clarity</h3>
+                <span class="phase-days">Beyond 30 Days</span>
+              </div>
+              <ul class="phase-features">
+                <li>Long-term Maintenance Strategies</li>
+                <li>Troubleshooting Common Setbacks</li>
+                <li>Advanced Techniques</li>
+                <li>Building Your Clarity Lifestyle</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="preview-sample">
+            <h3>Sample Chapter: Day 1 - Intentional Awareness</h3>
+            <div class="sample-content">
+              <p><strong>Morning Practice (10 minutes)</strong></p>
+              <p>
+                Complete a baseline Mental Noise Assessment, rating your current
+                mental clarity on a scale of 1-10 in various categories. Set
+                your intention for the program, writing a specific statement
+                about what mental clarity would mean for your life.
+              </p>
+
+              <p><strong>The Science Behind It</strong></p>
+              <p>
+                Research on metacognition (thinking about thinking) shows that
+                simply observing our thought patterns creates the neural
+                distance needed to begin changing them...
+              </p>
+
+              <a href="#purchase" class="sample-cta"
+                >Get Full Access to All 30 Days</a
+              >
+            </div>
+          </div>
         </div>
-    </section>    <!-- Research & Credibility Section -->
+      </div>
+    </section>
+    <!-- Research & Credibility Section -->
     <section id="testimonials" class="testimonials-section">
-        <div class="container">
-            <h2 class="section-title">Based on Scientific Research</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">
-                        🧠 Neuroscience
-                    </div>
-                    <p class="testimonial-text">
-                        "Mindfulness meditation has been shown to reduce anxiety and improve cognitive control through changes in brain structure and function."
-                    </p>
-                    <div class="testimonial-author">
-                        <strong>Harvard Medical School</strong>
-                        <span>Neuroplasticity Research, 2023</span>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">
-                        📊 Clinical Studies
-                    </div>
-                    <p class="testimonial-text">
-                        "Cognitive behavioral techniques show significant efficacy in reducing rumination and worry patterns in adults with anxiety."
-                    </p>
-                    <div class="testimonial-author">
-                        <strong>Journal of Clinical Psychology</strong>
-                        <span>Meta-analysis, 2024</span>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-rating">
-                        🎯 Evidence-Based
-                    </div>
-                    <p class="testimonial-text">
-                        "Structured 30-day programs provide optimal timeframes for establishing new neural pathways and behavioral patterns."
-                    </p>
-                    <div class="testimonial-author">
-                        <strong>American Psychological Association</strong>
-                        <span>Behavioral Change Research, 2023</span>
-                    </div>
-                </div>
+      <div class="container">
+        <h2 class="section-title">Based on Scientific Research</h2>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="testimonial-rating">🧠 Neuroscience</div>
+            <p class="testimonial-text">
+              "Mindfulness meditation has been shown to reduce anxiety and
+              improve cognitive control through changes in brain structure and
+              function."
+            </p>
+            <div class="testimonial-author">
+              <strong>Harvard Medical School</strong>
+              <span>Neuroplasticity Research, 2023</span>
             </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-rating">📊 Clinical Studies</div>
+            <p class="testimonial-text">
+              "Cognitive behavioral techniques show significant efficacy in
+              reducing rumination and worry patterns in adults with anxiety."
+            </p>
+            <div class="testimonial-author">
+              <strong>Journal of Clinical Psychology</strong>
+              <span>Meta-analysis, 2024</span>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-rating">🎯 Evidence-Based</div>
+            <p class="testimonial-text">
+              "Structured 30-day programs provide optimal timeframes for
+              establishing new neural pathways and behavioral patterns."
+            </p>
+            <div class="testimonial-author">
+              <strong>American Psychological Association</strong>
+              <span>Behavioral Change Research, 2023</span>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Purchase Section -->
     <section id="purchase" class="purchase-section">
-        <div class="container">            <div class="purchase-content">
-                <div class="purchase-left">
-                    <h2 class="purchase-title">Start Your 30-Day Transformation Today</h2>
-                    
-                    <!-- Optional Urgency Timer (uncomment to enable) -->
-                    <!-- <div class="urgency-timer"></div> -->
-                    
-                    <div class="purchase-features">
-                        <div class="feature-item">
-                            <span class="feature-icon">✅</span>
-                            <span>Complete 30-Day Program (200+ pages)</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">✅</span>
-                            <span>Daily Exercises & Worksheets</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">✅</span>
-                            <span>Progress Tracking Templates</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">✅</span>
-                            <span>Quick Reference Guide</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">✅</span>
-                            <span>Multiple Formats (PDF,  ePub )</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">✅</span>
-                            <span>Instant Download</span>
-                        </div>
-                        <div class="feature-item">
-                            <span class="feature-icon">✅</span>
-                            <span>30-Day Money Back Guarantee</span>
-                        </div>
-                    </div>
-                </div>
-                  <div class="purchase-right">
-                    <div class="pricing-card">
-                        
-                        <div class="purchase-form">
-                            <div class="payment-options">
-                                <!-- Stripe Payment Button -->
-                                <div class="payment-option">
-                                </div>
-                            
-                                
-                                <!-- PayPal Payment Button -->
-                                <div class="payment-option paypal-option">
-                                    <div id="paypal-container-C87X4VN8GQE2G"></div>
-                                    <script>
-                                      paypal.HostedButtons({
-                                        hostedButtonId: "C87X4VN8GQE2G",
-                                      }).render("#paypal-container-C87X4VN8GQE2G")
-                                    </script>
-                                </div>
-                            </div>
-                            
-                            <div class="payment-security">
-                                <div class="security-badges">
-                                    <span class="security-badge">🔒 SSL Secured</span>
-                                    <span class="security-badge">💳 Stripe Protected</span>
-                                    <span class="security-badge">🅿️ PayPal Secure</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="guarantee">
-                            <div class="guarantee-badge">
-                                <span class="guarantee-icon">💰</span>
-                                <div class="guarantee-text">
-                                    <strong>30-Day Money Back Guarantee</strong>
-                                    <p>If you don't experience noticeable improvements in your mental clarity within 30 days, we'll refund every penny.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <div class="container">
+        <div class="purchase-content">
+          <div class="purchase-left">
+            <h2 class="purchase-title">
+              Start Your 30-Day Transformation Today
+            </h2>
+
+            <!-- Optional Urgency Timer (uncomment to enable) -->
+            <!-- <div class="urgency-timer"></div> -->
+
+            <div class="purchase-features">
+              <div class="feature-item">
+                <span class="feature-icon">✅</span>
+                <span>Complete 30-Day Program (200+ pages)</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">✅</span>
+                <span>Daily Exercises & Worksheets</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">✅</span>
+                <span>Progress Tracking Templates</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">✅</span>
+                <span>Quick Reference Guide</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">✅</span>
+                <span>Multiple Formats (PDF, ePub )</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">✅</span>
+                <span>Instant Download</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">✅</span>
+                <span>30-Day Money Back Guarantee</span>
+              </div>
             </div>
+          </div>
+          <div class="purchase-right">
+            <div class="pricing-card">
+              <div class="purchase-form">
+                <div class="payment-options">
+                  <!-- Stripe Payment Button -->
+                  <div class="payment-option"></div>
+
+                  <!-- PayPal Payment Button -->
+                  <div class="payment-option paypal-option">
+                    <div id="paypal-container-C87X4VN8GQE2G"></div>
+                    <script>
+                      paypal
+                        .HostedButtons({
+                          hostedButtonId: "C87X4VN8GQE2G",
+                        })
+                        .render("#paypal-container-C87X4VN8GQE2G");
+                    </script>
+                  </div>
+                </div>
+
+                <div class="payment-security">
+                  <div class="security-badges">
+                    <span class="security-badge">🔒 SSL Secured</span>
+                    <span class="security-badge">💳 Stripe Protected</span>
+                    <span class="security-badge">🅿️ PayPal Secure</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="guarantee">
+                <div class="guarantee-badge">
+                  <span class="guarantee-icon">💰</span>
+                  <div class="guarantee-text">
+                    <strong>30-Day Money Back Guarantee</strong>
+                    <p>
+                      If you don't experience noticeable improvements in your
+                      mental clarity within 30 days, we'll refund every penny.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- FAQ Section -->
     <section class="faq-section">
-        <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <div class="faq-list">
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>How is this different from other mindfulness books?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Unlike generic mindfulness advice, "Quiet the Noise" provides a structured, day-by-day protocol based on neuroscience research. You'll get specific techniques for your unique mental noise patterns, not one-size-fits-all meditation instructions.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>What if I don't have time for lengthy daily practices?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>The program is designed for busy people. Most daily exercises take 5-15 minutes. The techniques integrate into your existing routine rather than requiring additional time blocks.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>Is this suitable for severe anxiety or depression?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>This program is designed for everyday mental noise and mild to moderate anxiety. If you're dealing with severe anxiety or depression, please consult with a mental health professional before starting any self-help program.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>What formats do I get?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>You'll receive the complete eBook in PDF,  ePuband   formats, so you can read on any device. You'll also get printable worksheets and a quick reference guide.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h3>How does the money-back guarantee work?</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>If you don't see improvements in your mental clarity within 30 days of following the program, simply email us for a full refund. No questions asked, no hoops to jump through.</p>
-                    </div>
-                </div>
+      <div class="container">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How is this different from other mindfulness books?</h3>
+              <span class="faq-toggle">+</span>
             </div>
+            <div class="faq-answer">
+              <p>
+                Unlike generic mindfulness advice, "Quiet the Noise" provides a
+                structured, day-by-day protocol based on neuroscience research.
+                You'll get specific techniques for your unique mental noise
+                patterns, not one-size-fits-all meditation instructions.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>What if I don't have time for lengthy daily practices?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                The program is designed for busy people. Most daily exercises
+                take 5-15 minutes. The techniques integrate into your existing
+                routine rather than requiring additional time blocks.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>Is this suitable for severe anxiety or depression?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                This program is designed for everyday mental noise and mild to
+                moderate anxiety. If you're dealing with severe anxiety or
+                depression, please consult with a mental health professional
+                before starting any self-help program.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>What formats do I get?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                You'll receive the complete eBook in PDF, ePuband formats, so
+                you can read on any device. You'll also get printable worksheets
+                and a quick reference guide.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h3>How does the money-back guarantee work?</h3>
+              <span class="faq-toggle">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                If you don't see improvements in your mental clarity within 30
+                days of following the program, simply email us for a full
+                refund. No questions asked, no hoops to jump through.
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
 
     <!-- Final CTA -->
     <section class="final-cta">
-        <div class="container">
-            <div class="final-cta-content">
-                <h2>Your Calmer Mind is Just 30 Days Away</h2>
-                <p>Stop letting mental noise steal your peace, productivity, and potential. Join thousands who have already transformed their mental experience.</p>                <a href="#purchase" class="cta-primary-large">
-                    Get "Quiet the Noise" Now - $1 USD
-                    <span class="cta-subtext">Instant download • 30-day guarantee</span>
-                </a>
-            </div>
+      <div class="container">
+        <div class="final-cta-content">
+          <h2>Your Calmer Mind is Just 30 Days Away</h2>
+          <p>
+            Stop letting mental noise steal your peace, productivity, and
+            potential. Join thousands who have already transformed their mental
+            experience.
+          </p>
+          <a href="#purchase" class="cta-primary-large">
+            Get "Quiet the Noise" Now - $1 USD
+            <span class="cta-subtext">Instant download • 30-day guarantee</span>
+          </a>
         </div>
+      </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-main">
-                    <h3>Quiet the Noise</h3>
-                    <p>Transform your mind in 30 days with science-based techniques for mental clarity and anxiety reduction.</p>
-                </div>
-                <div class="footer-links">
-                    <div class="footer-section">
-                        <h4>Support</h4>                        <ul>
-                            <li><a href="contact.html">Contact Us</a></li>
-                            <li><a href="#faq">FAQ</a></li>
-                            <li><a href="refund-policy.html">Refund Policy</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Legal</h4>
-                        <ul>
-                            <li><a href="privacy-policy.html">Privacy Policy</a></li>
-                            <li><a href="terms-of-service.html">Terms of Service</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Follow Us</h4>
-                        <div class="social-links">
-                            <a href="https://www.facebook.com/profile.php?id=61577312729734" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                </svg>
-                            </a>
-                            <a href="https://www.instagram.com/quietthenoise11/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                </svg>
-                            </a>
-                            <a href="https://www.youtube.com/@QuietTheNoise-p9b" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="YouTube">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                                </svg>
-                            </a>
-                            <a href="https://www.tiktok.com/@quiet.the.noise" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="TikTok">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-main">
+            <h3>Quiet the Noise</h3>
+            <p>
+              Transform your mind in 30 days with science-based techniques for
+              mental clarity and anxiety reduction.
+            </p>
+          </div>
+          <div class="footer-links">
+            <div class="footer-section">
+              <h4>Support</h4>
+              <ul>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="refund-policy.html">Refund Policy</a></li>
+              </ul>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Quiet the Noise. All rights reserved.</p>
+            <div class="footer-section">
+              <h4>Legal</h4>
+              <ul>
+                <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="terms-of-service.html">Terms of Service</a></li>
+              </ul>
             </div>
+            <div class="footer-section">
+              <h4>Follow Us</h4>
+              <div class="social-links">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61577312729734"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link"
+                  aria-label="Facebook"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.instagram.com/quietthenoise11/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link"
+                  aria-label="Instagram"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.youtube.com/@QuietTheNoise-p9b"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link"
+                  aria-label="YouTube"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.tiktok.com/@quiet.the.noise"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-link"
+                  aria-label="TikTok"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-    </footer>    <!-- JavaScript -->
+        <div class="footer-bottom">
+          <p>&copy; 2025 Quiet the Noise. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+    
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/59175776491?text=Hello,%20I'm%20interested%20in%20the%20Quiet%20the%20Noise%20eBook.%20Could%20you%20help%20me?" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="whatsapp-button"
+           aria-label="Chat on WhatsApp">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.893 3.488"/>
+            </svg>
+            <span class="whatsapp-text">WhatsApp</span>
+        </a>
+    </div>
+    
+    <!-- JavaScript -->
     <script src="./js/config.js"></script>
     <script src="./js/debug-supabase.js"></script>
     <script src="./js/debug-paypal.js"></script>
@@ -612,170 +838,210 @@
     <script src="./js/purchase-handler.js"></script>
     <script src="./js/production-validation.js"></script>
     <script src="./js/main.js"></script>
-      <!-- PayPal Integration with Multiple Approaches -->
+    <!-- PayPal Integration with Multiple Approaches -->
     <script>
-        // PayPal success callback - handles completed payments
-        window.onPayPalSuccess = function(details, data) {
-            console.log('🎉 PayPal SUCCESS callback triggered!');
-            console.log('PayPal Details:', details);
-            console.log('PayPal Data:', data);
-            
-            // Extract customer information from PayPal response
-            const customerData = {
-                name: details.payer?.name ? 
-                      `${details.payer.name.given_name || ''} ${details.payer.name.surname || ''}`.trim() :
-                      'PayPal Customer',
-                email: details.payer?.email_address || 'no-email@paypal.com',
-                transactionId: details.id || data.orderID || 'no-transaction-id',
-                paymentMethod: 'paypal'
-            };
-            
-            console.log('Customer Data Extracted:', customerData);
-            processPayPalPurchase(customerData);
-            return true;
-        };
-        
-        // PayPal error callback
-        window.onPayPalError = function(err) {
-            console.error('❌ PayPal payment error:', err);
-            alert('❌ Payment failed. Please try again or contact support.');
-        };
-        
-        // PayPal cancel callback
-        window.onPayPalCancel = function(data) {
-            console.log('❌ PayPal payment cancelled:', data);
-            alert('ℹ️ Payment was cancelled.');
+      // PayPal success callback - handles completed payments
+      window.onPayPalSuccess = function (details, data) {
+        console.log("🎉 PayPal SUCCESS callback triggered!");
+        console.log("PayPal Details:", details);
+        console.log("PayPal Data:", data);
+
+        // Extract customer information from PayPal response
+        const customerData = {
+          name: details.payer?.name
+            ? `${details.payer.name.given_name || ""} ${
+                details.payer.name.surname || ""
+              }`.trim()
+            : "PayPal Customer",
+          email: details.payer?.email_address || "no-email@paypal.com",
+          transactionId: details.id || data.orderID || "no-transaction-id",
+          paymentMethod: "paypal",
         };
 
-        // Process PayPal purchase
-        function processPayPalPurchase(customerData) {
-            console.log('🔄 Processing PayPal purchase:', customerData);
-            alert('🔄 Processing your purchase...');
-            
-            if (typeof handleSuccessfulPurchase === 'function') {
-                handleSuccessfulPurchase(customerData).then(result => {
-                    console.log('Purchase processing result:', result);
-                    if (result.success) {
-                        alert('✅ ' + result.message);
-                        // Redirect to thank you page after successful processing
-                        setTimeout(() => {
-                            window.location.href = '#success';
-                        }, 2000);
-                    } else {
-                        alert('❌ ' + result.message);
-                    }
-                }).catch(error => {
-                    console.error('Error processing purchase:', error);
-                    alert('❌ Error processing purchase. Please contact support with transaction ID: ' + customerData.transactionId);
+        console.log("Customer Data Extracted:", customerData);
+        processPayPalPurchase(customerData);
+        return true;
+      };
+
+      // PayPal error callback
+      window.onPayPalError = function (err) {
+        console.error("❌ PayPal payment error:", err);
+        alert("❌ Payment failed. Please try again or contact support.");
+      };
+
+      // PayPal cancel callback
+      window.onPayPalCancel = function (data) {
+        console.log("❌ PayPal payment cancelled:", data);
+        alert("ℹ️ Payment was cancelled.");
+      };
+
+      // Process PayPal purchase
+      function processPayPalPurchase(customerData) {
+        console.log("🔄 Processing PayPal purchase:", customerData);
+        alert("🔄 Processing your purchase...");
+
+        if (typeof handleSuccessfulPurchase === "function") {
+          handleSuccessfulPurchase(customerData)
+            .then((result) => {
+              console.log("Purchase processing result:", result);
+              if (result.success) {
+                alert("✅ " + result.message);
+                // Redirect to thank you page after successful processing
+                setTimeout(() => {
+                  window.location.href = "#success";
+                }, 2000);
+              } else {
+                alert("❌ " + result.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Error processing purchase:", error);
+              alert(
+                "❌ Error processing purchase. Please contact support with transaction ID: " +
+                  customerData.transactionId
+              );
+            });
+        } else {
+          console.error("handleSuccessfulPurchase function not found!");
+          alert(
+            "❌ System error. Please contact support with transaction ID: " +
+              customerData.transactionId
+          );
+        }
+      }
+
+      // Alternative approach: Use return URL method
+      function checkForPayPalReturn() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get("paymentId");
+        const token = urlParams.get("token");
+        const PayerID = urlParams.get("PayerID");
+
+        if (paymentId || token) {
+          console.log("🔍 Detected PayPal return with parameters:", {
+            paymentId,
+            token,
+            PayerID,
+          });
+
+          // Simulate success with available data
+          const customerData = {
+            name: "PayPal Customer",
+            email: "customer@paypal.com",
+            transactionId: paymentId || token || "url-return-" + Date.now(),
+            paymentMethod: "paypal",
+          };
+
+          processPayPalPurchase(customerData);
+
+          // Clean URL
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+          );
+        }
+      }
+
+      // Initialize PayPal buttons
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("🚀 Initializing PayPal integration...");
+
+        // Check if we're returning from PayPal
+        checkForPayPalReturn();
+
+        // Forzar el uso de botones nativos para asegurar callbacks
+        setTimeout(() => {
+          console.log(
+            "🔄 Force rendering NATIVE PayPal buttons for proper callbacks..."
+          );
+          renderNativePayPalButton();
+        }, 2000);
+
+        // Backup render en caso de que falle el primero
+        setTimeout(() => {
+          const container = document.getElementById(
+            "paypal-container-C87X4VN8GQE2G"
+          );
+          if (
+            container &&
+            (!container.innerHTML.trim() ||
+              container.innerHTML.includes("Error"))
+          ) {
+            console.log("🔄 Retry rendering PayPal buttons...");
+            renderNativePayPalButton();
+          }
+        }, 5000);
+      });
+
+      // Fallback: Native PayPal button
+      function renderNativePayPalButton() {
+        console.log("🔄 Rendering native PayPal button as fallback...");
+
+        // Create a fallback container
+        const container = document.getElementById(
+          "paypal-container-C87X4VN8GQE2G"
+        );
+        if (container && typeof paypal !== "undefined" && paypal.Buttons) {
+          container.innerHTML = ""; // Clear hosted button
+
+          paypal
+            .Buttons({
+              createOrder: function (data, actions) {
+                console.log("🛒 Creating PayPal order...");
+                return actions.order.create({
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: "1",
+                        currency_code: "USD",
+                      },
+                      description:
+                        "Quiet the Noise: 30 Days to Mental Clarity eBook",
+                    },
+                  ],
                 });
-            } else {
-                console.error('handleSuccessfulPurchase function not found!');
-                alert('❌ System error. Please contact support with transaction ID: ' + customerData.transactionId);
-            }
-        }
+              },
+              onApprove: function (data, actions) {
+                console.log("✅ PayPal payment approved:", data);
+                return actions.order.capture().then(function (details) {
+                  console.log("💰 PayPal payment captured:", details);
 
-        // Alternative approach: Use return URL method
-        function checkForPayPalReturn() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentId = urlParams.get('paymentId');
-            const token = urlParams.get('token');
-            const PayerID = urlParams.get('PayerID');
-            
-            if (paymentId || token) {
-                console.log('🔍 Detected PayPal return with parameters:', {paymentId, token, PayerID});
-                
-                // Simulate success with available data
-                const customerData = {
-                    name: 'PayPal Customer',
-                    email: 'customer@paypal.com',
-                    transactionId: paymentId || token || 'url-return-' + Date.now(),
-                    paymentMethod: 'paypal'
-                };
-                
-                processPayPalPurchase(customerData);
-                
-                // Clean URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        }
+                  const customerData = {
+                    name: details.payer?.name
+                      ? `${details.payer.name.given_name || ""} ${
+                          details.payer.name.surname || ""
+                        }`.trim()
+                      : "PayPal Customer",
+                    email:
+                      details.payer?.email_address || "no-email@paypal.com",
+                    transactionId: details.id || data.orderID,
+                    paymentMethod: "paypal_native",
+                  };
 
-        // Initialize PayPal buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Initializing PayPal integration...');
-            
-            // Check if we're returning from PayPal
-            checkForPayPalReturn();
-            
-            // Forzar el uso de botones nativos para asegurar callbacks
-            setTimeout(() => {
-                console.log('🔄 Force rendering NATIVE PayPal buttons for proper callbacks...');
-                renderNativePayPalButton();
-            }, 2000);
-            
-            // Backup render en caso de que falle el primero
-            setTimeout(() => {
-                const container = document.getElementById('paypal-container-C87X4VN8GQE2G');
-                if (container && (!container.innerHTML.trim() || container.innerHTML.includes('Error'))) {
-                    console.log('🔄 Retry rendering PayPal buttons...');
-                    renderNativePayPalButton();
-                }
-            }, 5000);
-        });
-        
-        // Fallback: Native PayPal button
-        function renderNativePayPalButton() {
-            console.log('🔄 Rendering native PayPal button as fallback...');
-            
-            // Create a fallback container
-            const container = document.getElementById('paypal-container-C87X4VN8GQE2G');
-            if (container && typeof paypal !== 'undefined' && paypal.Buttons) {
-                container.innerHTML = ''; // Clear hosted button
-                
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        console.log('🛒 Creating PayPal order...');
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: '1',
-                                    currency_code: 'USD'
-                                },
-                                description: 'Quiet the Noise: 30 Days to Mental Clarity eBook'
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        console.log('✅ PayPal payment approved:', data);
-                        return actions.order.capture().then(function(details) {
-                            console.log('💰 PayPal payment captured:', details);
-                            
-                            const customerData = {
-                                name: details.payer?.name ? 
-                                      `${details.payer.name.given_name || ''} ${details.payer.name.surname || ''}`.trim() :
-                                      'PayPal Customer',
-                                email: details.payer?.email_address || 'no-email@paypal.com',
-                                transactionId: details.id || data.orderID,
-                                paymentMethod: 'paypal_native'
-                            };
-                            
-                            processPayPalPurchase(customerData);
-                        });
-                    },
-                    onError: function(err) {
-                        console.error('❌ PayPal native button error:', err);
-                        alert('❌ Payment failed. Please try again or contact support.');
-                    },
-                    onCancel: function(data) {
-                        console.log('❌ PayPal payment cancelled:', data);
-                        alert('ℹ️ Payment was cancelled.');
-                    }
-                }).render('#paypal-container-C87X4VN8GQE2G').then(function() {
-                    console.log('✅ PayPal native button rendered successfully');
-                }).catch(function(err) {
-                    console.error('❌ PayPal native button render failed:', err);
+                  processPayPalPurchase(customerData);
                 });
-            }
+              },
+              onError: function (err) {
+                console.error("❌ PayPal native button error:", err);
+                alert(
+                  "❌ Payment failed. Please try again or contact support."
+                );
+              },
+              onCancel: function (data) {
+                console.log("❌ PayPal payment cancelled:", data);
+                alert("ℹ️ Payment was cancelled.");
+              },
+            })
+            .render("#paypal-container-C87X4VN8GQE2G")
+            .then(function () {
+              console.log("✅ PayPal native button rendered successfully");
+            })
+            .catch(function (err) {
+              console.error("❌ PayPal native button render failed:", err);
+            });
         }
+      }
     </script>
-</body>
+  </body>
 </html>
