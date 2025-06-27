@@ -284,9 +284,58 @@ p {
 }
 
 .social-proof {
-    font-size: 0.9rem;
-    color: var(--text-light);
     margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Hero Social Links */
+.hero-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    flex-direction: row;
+}
+
+.social-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-align: center;
+}
+
+.hero-social-links {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.hero-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.hero-social-link:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.hero-social-link svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Hero Visual */
@@ -1431,12 +1480,19 @@ p {
         gap: 1rem;
     }
     
-    .benefit-item {
-        font-size: 0.8rem;
-        padding: 6px 12px;
+    .hero-social {
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
     }
-      .book-showcase {
-        max-width: 250px;
+    
+    .social-text {
+        text-align: center;
+    }
+    
+    .hero-social-links {
+        justify-content: center;
     }
     
     .floating-elements {
@@ -1669,10 +1725,6 @@ p {
     .benefit-item {
         font-size: 0.75rem;
         padding: 4px 8px;
-    }
-    
-    .benefit-icon {
-        font-size: 1rem;
     }
     
     .book-showcase {
